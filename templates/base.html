@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel = "stylesheet" href = "{{ url_for('static', filename = 'css/main.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename = 'img/icons/favicon-32x32.png') }}" sizes="32x32" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename = 'img/icons/favicon-16x16.png') }}" sizes="16x16" />
+
+    <meta name = "author" content = "Olivia Leggio">
+    
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div id = "top-bar">
+        <ul id = "nav">
+            <li><a href = "/cart" id = "cart">cart</a></li>
+            <li class = "dropdown">
+                <a href = "javascript:void(0)" class = "dropmenu">user</a>
+                <div class = "dropmenu-content">
+                    <a href = "/account">account</a>
+                    <a href = "/wallet">my balance</a>
+                    <a href = "/history">order history</a>
+                </div>
+            </li>
+        </ul>
+        <a href = "/">
+            <img src = "{{ url_for('static', filename = 'img/logo1.png') }}" width = "68" height = "68" id = "logo">
+        </a>
+    </div>
+    {% block body %}{% endblock %}
+</body>
+</html>

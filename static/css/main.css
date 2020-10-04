@@ -1,0 +1,82 @@
+body {
+    margin: 0;
+    background-color: rgb(217, 233, 255);
+}
+
+#nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(17, 27, 119);
+}
+
+#nav li {
+    float: right;
+}
+
+li a, .dropmenu {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    font-size: 16pt;
+    padding: 25px 40px;
+    text-decoration: none;
+}
+
+li a:hover, .dropdown:hover {
+    background-color: rgb(38, 52, 180);
+}
+
+.dropdown {
+    display: inline-block;
+}
+
+.dropmenu-content {
+    display: none;
+    position: absolute;
+    background-color: rgb(218, 218, 218);
+    min-width: 10%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropmenu-content a {
+    color: black;
+    font-size: 12pt;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropmenu-content a:hover {
+    background-color: rgb(214, 212, 212);
+}
+.dropmenu-content a:active {
+    background-color: rgb(206, 203, 203);
+}
+
+.dropdown:hover .dropmenu-content {
+    display:block;
+}
+
+#cart:active {
+    color: rgb(148, 166, 248);
+}
+
+#logo {
+    position: absolute;
+    /*bottom: 92.5%;*/
+    top: 2%;
+}
+
+
+#top-bar {
+    position: relative;
+    top: 0px;
+}
+
+h1 {
+    text-align: center;
+}
