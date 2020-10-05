@@ -1,8 +1,10 @@
-<h1>Here is a page backed by a database</h1>
-<ul>
-  <li><a href="/">Root Page</a></li>
-</ul>
+{% extends 'base.html' %}
 
+{% block head %}
+<title>Mini Amazon</title>
+{% endblock %}
+
+{% block body %}
 <h3>Items</h3>
 <table>
   <thead>
@@ -22,3 +24,32 @@
   {% endfor %}
   </tbody>
 </table>
+
+<br /><br />
+
+<h2>Add an Item<h2>
+<form action="/add_item" >
+  <label>Item Name</label><br />
+  <input type="text" name="name" />
+  <br />
+  <br />
+
+  <label>Model</label><br />
+  <input type="text" name="brand" />
+  <br/>
+  <br />
+
+  <label>Color</label><br />
+  <input type="text" name="color" />
+  <br />
+  <br />
+
+  <label>Size</label><br />
+  <input type="number" name="size" />
+  <br />
+  <br />
+
+  <input type="submit" />
+</form>
+
+{% endblock %}
