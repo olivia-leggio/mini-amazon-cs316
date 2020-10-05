@@ -1,0 +1,24 @@
+<h1>Here is a page backed by a database</h1>
+<ul>
+  <li><a href="/">Root Page</a></li>
+</ul>
+
+<h3>Items</h3>
+<table>
+  <thead>
+    <th>Name</th>
+    <th>Brand</th>
+    <th>Color</th>
+    <th>Size</th>
+  </thead>
+  <tbody>
+  {% for item in items %}
+    <tr>
+      <td> {{ item.name }}</td>
+      <td> {{ item.brand }}</td>
+      <td> {{ item.color }}</td>
+      <td> {{ item.size }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
