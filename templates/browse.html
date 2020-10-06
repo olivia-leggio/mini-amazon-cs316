@@ -5,6 +5,17 @@
 {% endblock %}
 
 {% block body %}
+<h2>Browse By Category<h2>
+<form action="/browse" >
+  <select name="cat" id="cat">
+    <option value = "ALL"> All </option>
+    {% for cat in cats %}
+    <option value = {{ cat.name }} > {{ cat.name }} </option>
+    {% endfor %}
+  </select>
+  <input type="submit" />
+</form>
+
 <h3>Items</h3>
 <table>
   <thead>
@@ -24,24 +35,6 @@
   {% endfor %}
   </tbody>
 </table>
-
-<h3>InCategory</h3>
-<table>
-  <thead>
-    <th>Item</th>
-    <th>Category</th>
-  </thead>
-  <tbody>
-  {% for cat in cats %}
-    <tr>
-      <td> {{ cat.item.name }}</td>
-      <td> {{ cat.category.name }}</td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
-
-
 <br /><br />
 
 <h2>Add an Item<h2>
@@ -63,6 +56,15 @@
 
   <label>Size</label><br />
   <input type="number" name="size" />
+  <br />
+  <br />
+
+  <label>Primary Category</label><br />
+  <select name="cat" id="cat">
+    {% for cat in cats %}
+    <option value = {{ cat.name }} > {{ cat.name }} </option>
+    {% endfor %}
+  </select>
   <br />
   <br />
 

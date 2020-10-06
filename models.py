@@ -24,7 +24,7 @@ class Category(Base):
     __tablename__ = 'categories'
     id = Column(Integer, primary_key=True)
     name = Column(String(20), unique=True)
-    items = relationship("InCat", back_populates="category")
+    items = relationship("InCat", back_populates="cat")
 
     def __init__(self, name=None):
         self.name = name
@@ -37,4 +37,4 @@ class InCat(Base):
     item_id = Column(Integer,ForeignKey('items.id'),primary_key=True)
     cat_id = Column(Integer,ForeignKey('categories.id'),primary_key=True)
     item = relationship("Item",back_populates="categories")
-    category = relationship("Category",back_populates="items")
+    cat = relationship("Category",back_populates="items")

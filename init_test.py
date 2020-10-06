@@ -13,13 +13,13 @@ db_session.add(household)
 
 item = Item('Batman','DC','Black','2')
 assoc = InCat()
-assoc.category = toys
+assoc.cat = toys
 item.categories.append(assoc)
 db_session.add(item)
 
 item = Item('Cup','Solo','Red','1')
 assoc = InCat()
-assoc.category = household
+assoc.cat = household
 item.categories.append(assoc)
 db_session.add(item)
 
