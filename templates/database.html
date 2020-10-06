@@ -25,6 +25,23 @@
   </tbody>
 </table>
 
+<h3>InCategory</h3>
+<table>
+  <thead>
+    <th>Item</th>
+    <th>Category</th>
+  </thead>
+  <tbody>
+  {% for cat in cats %}
+    <tr>
+      <td> {{ cat.item.name }}</td>
+      <td> {{ cat.category.name }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+
 <br /><br />
 
 <h2>Add an Item<h2>

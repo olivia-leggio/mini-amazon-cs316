@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect, url_for, render_template
-from models import Item
+from models import *
 from database import db_session
 
 app = Flask(__name__)
@@ -14,7 +14,8 @@ def index():
 def database():
   return render_template(
     'database.html',
-    items = Item.query.all()
+    items = Item.query.all(),
+    cats = InCat.query.all()
   )
 
 @app.route('/add_item')
@@ -33,7 +34,7 @@ def add_item():
 
 @app.route('/account')
 def account():
-    return render_template('account.html',items = Item.query.all())
+    return render_template('account.html')
 
 @app.route('/wallet')
 def wallet():
