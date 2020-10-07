@@ -9,7 +9,7 @@ class Item(Base):
     brand = Column(String(20), unique=False)
     color = Column(String(20), unique=False)
     size = Column(Integer, unique=False)
-    categories = relationship("InCat", back_populates="item")
+    categories = relationship("InCat",back_populates="item",cascade="all, delete-orphan")
 
     def __init__(self, name=None, brand=None, color=None, size=None):
         self.name = name
@@ -24,7 +24,7 @@ class Category(Base):
     __tablename__ = 'categories'
     id = Column(Integer, primary_key=True)
     name = Column(String(20), unique=True)
-    items = relationship("InCat", back_populates="cat")
+    items = relationship("InCat",back_populates="cat",cascade="all, delete-orphan")
 
     def __init__(self, name=None):
         self.name = name

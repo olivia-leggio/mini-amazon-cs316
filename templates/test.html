@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Mini Amazon</title>
+{% endblock %}
+
+{% block body %}
+<h3>Items</h3>
+<table>
+  <thead>
+    <th>Name</th>
+    <th>Brand</th>
+    <th>Color</th>
+    <th>Size</th>
+  </thead>
+  <tbody>
+  {% for item in items %}
+    <tr>
+      <td> {{ item.name }}</td>
+      <td> {{ item.brand }}</td>
+      <td> {{ item.color }}</td>
+      <td> {{ item.size }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<br /><br />
+
+<h3>InCats</h3>
+<table>
+  <thead>
+    <th>Item</th>
+    <th>Category</th>
+  </thead>
+  <tbody>
+  {% for ic in incats %}
+    <tr>
+      <td> {{ ic.item.name }}</td>
+      <td> {{ ic.cat.name }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<br /><br />
+
+<h2>Delete Item<h2>
+<form action="/delete_item" >
+  <select name="item_id" id="item_id">
+    {% for item in items %}
+    <option value = {{ item.id }} > {{ item.name }} </option>
+    {% endfor %}
+  </select>
+  <input type="submit" />
+</form>
+
+<h2>New Category<h2>
+<form action="/new_cat" >
+  <input type="text" name="name" />
+  <input type="submit" />
+</form>
+
+<h2>Delete Category<h2>
+<form action="/delete_cat" >
+ <select name="cat_id" id="cat_id">
+    {% for cat in cats %}
+    <option value = {{ cat.id }} > {{ cat.name }} </option>
+    {% endfor %}
+  </select>
+  <input type="submit" />
+</form>
+
+{% endblock %}

@@ -32,6 +32,7 @@ def browse():
     incats = incats,
     items = items
   )
+
 @app.route('/add_item')
 def add_item():
   name = request.args.get("name")
@@ -50,6 +51,41 @@ def add_item():
 
   return redirect(url_for('browse'))
 
+@app.route('/test')
+def test():
+    return render_template(
+        'test.html',
+        cats = Category.query.all(),
+        incats = InCat.query.all(),
+        items = Item.query.all()
+    )
+
+@app.route('/delete_item')
+def delete_item():
+    item_id = request.args.get("item_id")
+    item = Item.query.filter_by(id=item_id).first()
+    db_session.delete(item)
+    db_session.commit()
+
+    return redirect(url_for('test'))
+
+@app.route('/new_cat')
+def new_cat():
+    name = request.args.get("name")
+    cat = Category(name)
+    db_session.add(cat)
+    db_session.commit()
+
+    return redirect(url_for('test'))
+
+@app.route('/delete_cat')
+def delete_cat():
+    cat_id = request.args.get("cat_id")
+    cat = Category.query.filter_by(id=cat_id).first()
+    db_session.delete(cat)
+    db_session.commit()
+
+    return redirect(url_for('test'))
 
 @app.route('/account')
 def account():
