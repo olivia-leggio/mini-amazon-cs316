@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Table, ForeignKey, CheckConstraint, Text, Float, DateTime
+from sqlalchemy import Column, Integer, String, Table, ForeignKey, CheckConstraint, Text, Float, DateTime, Boolean, UniqueConstraint
 from sqlalchemy.orm import relationship, backref
 from database import Base
 
@@ -14,6 +14,7 @@ class Item(Base):
     categories = relationship("InCat",back_populates="item",cascade="all, delete-orphan")
     reviews = relationship("Review",back_populates="item",cascade="all, delete-orphan")
     listings = relationship("Listing",back_populates="item",cascade="all, delete-orphan")
+    orders = relationship("Order",back_populates="item",cascade="all, delete-orphan")
 
     def __init__(self, name=None, brand=None, color=None, size=None,desc=None,img=None):
         self.name = name
@@ -60,6 +61,8 @@ class User(Base):
     reviews = relationship("Review",back_populates="user",cascade="all, delete-orphan")
     listings = relationship("Listing",back_populates="seller",cascade="all, delete-orphan")
     carts = relationship("Cart",back_populates="user",cascade="all, delete-orphan")
+    orders_buy = relationship("Order",back_populates="user",primaryjoin="User.id==Order.user_id",cascade="all, delete-orphan")
+    orders_sell = relationship("Order",back_populates="seller",primaryjoin="User.id==Order.seller_id",cascade="all, delete-orphan")
     __table_args__ = (
         CheckConstraint('type="User" OR type="Seller" OR type="Manager"'),{}
         )
@@ -84,6 +87,7 @@ class Warehouse(Base):
     state = Column(String(2), unique=False)
     capacity = Column(Integer, unique=False)
     listings = relationship("Listing",back_populates="warehouse",cascade="all, delete-orphan")
+    orders = relationship("Order",back_populates="warehouse",cascade="all, delete-orphan")
 
     def __init__(self,street=None,city=None,zip=None,state=None,capacity=None):
         self.street = street
@@ -126,11 +130,37 @@ class Listing(Base):
 
 class Cart(Base):
     __tablename__ = 'carts'
-    user_id = Column(Integer,ForeignKey('users.id'),primary_key=True)
-    listing_id = Column(Integer,ForeignKey('listings.id'),primary_key=True)
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer,ForeignKey('users.id'))
+    listing_id = Column(Integer,ForeignKey('listings.id'))
     amount = Column(Integer, unique = False)
     user = relationship("User",back_populates="carts",uselist=False)
     listing = relationship("Listing",back_populates="carts",uselist=False)
+    __table_args__ = (
+        UniqueConstraint('user_id','listing_id'),{}
+        )
 
     def __init__(self,amount=None):
+        self.amount = amount
+
+class Order(Base):
+    __tablename__ = 'orders'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer,ForeignKey('users.id'))
+    item_id = Column(Integer,ForeignKey('items.id'))
+    seller_id = Column(Integer,ForeignKey('users.id'))
+    warehouse_id = Column(Integer,ForeignKey('warehouses.id'))
+    date = Column(DateTime, unique=False)
+    delivered = Column(Boolean, unique = False)
+    price = Column(Float, unique = False)
+    amount = Column(Integer, unique = False)
+    user = relationship("User",back_populates="orders_buy",foreign_keys=[user_id],uselist=False)
+    seller = relationship("User",back_populates="orders_sell",foreign_keys=[seller_id],uselist=False)
+    item = relationship("Item",back_populates="orders",uselist=False)
+    warehouse = relationship("Warehouse",back_populates="orders",uselist=False)
+
+    def __init__(self,date=None,delivered=None,price=None,amount=None):
+        self.date = date
+        self.delivered = delivered
+        self.price = price
         self.amount = amount

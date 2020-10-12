@@ -65,7 +65,8 @@ def test():
         items = Item.query.all(),
         reviews = Review.query.all(),
         listings = Listing.query.all(),
-        carts = Cart.query.all()
+        carts = Cart.query.all(),
+        orders = Order.query.all()
     )
 
 @app.route('/delete_item')
@@ -174,6 +175,26 @@ def add_cart():
     db_session.commit()
 
     return redirect(url_for('test'))
+
+@app.route('/process_checkout')
+def process_checkout():
+    cart_id = request.args.get("cart_id")
+    cart = Cart.query.filter_by(id=cart_id).first()
+    order = Order(datetime.now(),False,cart.listing.price,cart.amount)
+    order.user = cart.user
+    order.seller = cart.listing.seller
+    order.item = cart.listing.item
+    order.warehouse = cart.listing.warehouse
+
+    cart.listing.amount = cart.listing.amount - cart.amount
+    cart.listing.seller.balance = cart.listing.seller.balance + cart.listing.price
+    cart.user.balance = cart.user.balance - cart.listing.price
+
+    db_session.add(order)
+    db_session.delete(cart)
+    db_session.commit()
+    return redirect(url_for('test'))
+
 
 @app.route('/account')
 def account():

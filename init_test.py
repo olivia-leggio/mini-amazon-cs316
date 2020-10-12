@@ -24,7 +24,7 @@ assoc.cat = household
 item.categories.append(assoc)
 db_session.add(item)
 
-alice = User('alice@gmail.com','pass','Alice',0,'User','1 University Dr','Durham',27708,'NC')
+alice = User('alice@gmail.com','pass','Alice',100,'User','1 University Dr','Durham',27708,'NC')
 db_session.add(alice)
 
 bob = User('bob@gmail.com','12345','Bob',0,'Seller','440 Chapel Dr','Durham',27708,'NC')
@@ -44,10 +44,17 @@ l1.seller = bob
 l1.warehouse = house
 db_session.add(l1)
 
-c1 = Cart(5)
+c1 = Cart(2)
 c1.listing = l1
 c1.user = alice
 db_session.add(c1)
+
+o1 = Order(datetime.now(),True,7.50,20)
+o1.user = bob
+o1.seller = bob
+o1.item = bat
+o1.warehouse = house
+db_session.add(o1)
 
 db_session.commit()
 

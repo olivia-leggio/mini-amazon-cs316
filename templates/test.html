@@ -321,4 +321,46 @@
   <input type="submit" />
 </form>
 
+<h1>Testing Orders Functionality</h1>
+<h3>Orders</h3>
+<table>
+  <thead>
+    <th>Buyer</th>
+    <th>Item</th>
+    <th>Seller</th>
+    <th>Warehouse</th>
+    <th>Price</th>
+    <th>Amount</th>
+    <th>Date</th>
+    <th>Delivered?</th>
+  </thead>
+  <tbody>
+  {% for o in orders %}
+    <tr>
+      <td> {{ o.user.name }}</td>
+      <td> {{ o.seller.name }}</td>
+      <td> {{ o.item.name }}</td>
+      <td> {{ o.warehouse_id }}</td>
+      <td> ${{ o.price }}</td>
+      <td> {{ o.amount }}</td>
+      <td> {{ o.date.date() }}</td>
+      <td> {{ o.delivered }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<br /><br />
+
+<h2>Checkout From Cart<h2>
+<form action="/process_checkout" >
+  <select name="cart_id" id="cart_id">
+     {% for c in carts %}
+     <option value = {{ c.id }} >
+       {{ c.user.name }}: {{ c.amount }} {{ c.listing.item.name }}'s at ${{ c.listing.price}} each
+     </option>
+     {% endfor %}
+   </select>
+  <input type="submit" />
+</form>
+
 {% endblock %}
