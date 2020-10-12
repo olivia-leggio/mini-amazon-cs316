@@ -57,6 +57,7 @@ def test():
     return render_template(
         'test.html',
         users = User.query.all(),
+        warehouses = Warehouse.query.all(),
         cats = Category.query.all(),
         incats = InCat.query.all(),
         items = Item.query.all()
@@ -102,6 +103,20 @@ def add_user():
 
   user = User(email,password,name,0,type,street,city,zip,state)
   db_session.add(user)
+  db_session.commit()
+
+  return redirect(url_for('test'))
+
+@app.route('/new_house')
+def new_house():
+  capacity = request.args.get("capacity")
+  street = request.args.get("street")
+  city = request.args.get("city")
+  zip = request.args.get("zip")
+  state = request.args.get("state")
+
+  house = Warehouse(street,city,zip,state,capacity)
+  db_session.add(house)
   db_session.commit()
 
   return redirect(url_for('test'))

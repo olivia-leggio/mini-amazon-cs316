@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<h1>Testing Users functionality</h1>
+<h1>Testing Users Functionality</h1>
 <h3>Users</h3>
 <table>
   <thead>
@@ -65,6 +65,41 @@
   <br />
   <br />
 
+  <input type="submit" />
+</form>
+
+<h1>Testing Warehouses Functionality</h1>
+<h3>Warehouses</h3>
+<table>
+  <thead>
+    <th>id</th>
+    <th>Address</th>
+    <th>Capacity</th>
+  </thead>
+  <tbody>
+  {% for house in warehouses %}
+    <tr>
+      <td> {{ house.id }}</td>
+      <td>{{ house.street }} {{ house.city }} {{ house.state }} {{ house.zip }}</td>
+      <td> {{ house.capacity }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<br /><br />
+
+<h2>New Category<h2>
+<form action="/new_house" >
+  <label>Address</label>
+  <input type="text" name="street" placeholder = "Street"/>
+  <input type="text" name="city" placeholder = "City"/>
+  <input type="number" name="zip" placeholder = "Zip"/>
+  <input type="text" name="state" placeholder = "State (NC)"/>
+  <br />
+  <br />
+  <label>Capacity</label>
+  <input type="number" name="capacity" />
+  <br />
   <input type="submit" />
 </form>
 

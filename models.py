@@ -55,7 +55,9 @@ class User(Base):
     city = Column(String(20), unique=False)
     zip = Column(Integer, unique=False)
     state = Column(String(2), unique=False)
-    typeCheck = CheckConstraint('type="User" OR type="Seller" OR type="Manager"')
+    __table_args__ = (
+        CheckConstraint('type="User" OR type="Seller" OR type="Manager"'),{}
+        )
 
     def __init__(self, email=None,password=None,name=None,balance=None,type="User",street=None,city=None,zip=None,state=None):
         self.email = email
@@ -67,3 +69,19 @@ class User(Base):
         self.city = city
         self.zip = zip
         self.state = state
+
+class Warehouse(Base):
+    __tablename__ = 'warehouses'
+    id = Column(Integer, primary_key=True)
+    street = Column(String(20), unique=False)
+    city = Column(String(20), unique=False)
+    zip = Column(Integer, unique=False)
+    state = Column(String(2), unique=False)
+    capacity = Column(Integer, unique=False)
+
+    def __init__(self,street=None,city=None,zip=None,state=None,capacity=None):
+        self.street = street
+        self.city = city
+        self.zip = zip
+        self.state = state
+        self.capacity = capacity

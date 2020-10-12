@@ -26,6 +26,9 @@ db_session.add(item)
 user = User('alice@gmail.com','pass','Alice',0,'User','1 University Dr','Durham',27708,'NC')
 db_session.add(user)
 
+house = Warehouse('23 University Dr','Durham',27708,'NC',100)
+db_session.add(house)
+
 db_session.commit()
 
 print("DONE!")
