@@ -16,6 +16,7 @@ class Item(Base):
     listings = relationship("Listing",back_populates="item",cascade="all, delete-orphan")
     orders = relationship("Order",back_populates="item",cascade="all, delete-orphan")
 
+
     def __init__(self, name=None, brand=None, color=None, size=None,desc=None,img=None):
         self.name = name
         self.brand = brand
@@ -64,7 +65,8 @@ class User(Base):
     orders_buy = relationship("Order",back_populates="user",primaryjoin="User.id==Order.user_id",cascade="all, delete-orphan")
     orders_sell = relationship("Order",back_populates="seller",primaryjoin="User.id==Order.seller_id",cascade="all, delete-orphan")
     __table_args__ = (
-        CheckConstraint('type="User" OR type="Seller" OR type="Manager"'),{}
+        CheckConstraint('type="User" OR type="Seller" OR type="Manager"'),
+        CheckConstraint('balance >= 0'),{}
         )
 
     def __init__(self, email=None,password=None,name=None,balance=None,type="User",street=None,city=None,zip=None,state=None):
@@ -123,6 +125,9 @@ class Listing(Base):
     item = relationship("Item",back_populates="listings",uselist=False)
     warehouse = relationship("Warehouse",back_populates="listings",uselist=False)
     carts = relationship("Cart",back_populates="listing",cascade="all, delete-orphan")
+    __table_args__ = (
+        CheckConstraint('amount >= 0'),{}
+        )
 
     def __init__(self,price=None,amount=None):
         self.price = price

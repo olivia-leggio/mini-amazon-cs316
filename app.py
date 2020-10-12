@@ -187,8 +187,8 @@ def process_checkout():
     order.warehouse = cart.listing.warehouse
 
     cart.listing.amount = cart.listing.amount - cart.amount
-    cart.listing.seller.balance = cart.listing.seller.balance + cart.listing.price
-    cart.user.balance = cart.user.balance - cart.listing.price
+    cart.listing.seller.balance = cart.listing.seller.balance + cart.listing.price*cart.amount
+    cart.user.balance = cart.user.balance - cart.listing.price*cart.amount
 
     db_session.add(order)
     db_session.delete(cart)
