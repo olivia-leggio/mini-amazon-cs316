@@ -59,11 +59,12 @@ class User(Base):
     city = Column(String(20), unique=False)
     zip = Column(Integer, unique=False)
     state = Column(String(2), unique=False)
-    reviews = relationship("Review",back_populates="user",cascade="all, delete-orphan")
     listings = relationship("Listing",back_populates="seller",cascade="all, delete-orphan")
     carts = relationship("Cart",back_populates="user",cascade="all, delete-orphan")
     orders_buy = relationship("Order",back_populates="user",primaryjoin="User.id==Order.user_id",cascade="all, delete-orphan")
     orders_sell = relationship("Order",back_populates="seller",primaryjoin="User.id==Order.seller_id",cascade="all, delete-orphan")
+    reviews_buy = relationship("Review",back_populates="user",primaryjoin="User.id==Review.user_id",cascade="all, delete-orphan")
+    reviews_sell = relationship("Review",back_populates="seller",primaryjoin="User.id==Review.seller_id",cascade="all, delete-orphan")
     __table_args__ = (
         CheckConstraint('type="User" OR type="Seller" OR type="Manager"'),
         CheckConstraint('balance >= 0'),{}
@@ -102,16 +103,20 @@ class Review(Base):
     __tablename__ = 'reviews'
     user_id = Column(Integer,ForeignKey('users.id'),primary_key=True)
     item_id = Column(Integer,ForeignKey('items.id'),primary_key=True)
+    seller_id = Column(Integer,ForeignKey('users.id'),nullable=True)
     text = Column(Text, unique=False)
     date = Column(DateTime, unique=False)
     item_rating = Column(Integer, unique=False)
-    user = relationship("User",back_populates="reviews",uselist=False)
+    seller_rating = Column(Integer, nullable=True)
+    user = relationship("User",back_populates="reviews_buy",foreign_keys=[user_id],uselist=False)
+    seller = relationship("User",back_populates="reviews_sell",foreign_keys=[seller_id],uselist=False)
     item = relationship("Item",back_populates="reviews",uselist=False)
 
-    def __init__(self,text=None,date=None,item_rating=None):
+    def __init__(self,text=None,date=None,item_rating=None,seller_rating=None):
         self.text = text
         self.date = date
         self.item_rating = item_rating
+        self.seller_rating = seller_rating
 
 class Listing(Base):
     __tablename__ = 'listings'

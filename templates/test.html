@@ -88,7 +88,7 @@
 </table>
 <br /><br />
 
-<h2>New Category<h2>
+<h2>New Warehouse<h2>
 <form action="/new_house" >
   <label>Address</label>
   <input type="text" name="street" placeholder = "Street"/>
@@ -180,6 +180,8 @@
     <th>Date</th>
     <th>Rating</th>
     <th>Text</th>
+    <th>Seller</th>
+    <th>Seller Rating</th>
   </thead>
   <tbody>
   {% for rev in reviews %}
@@ -189,6 +191,8 @@
       <td> {{ rev.date.date() }}</td>
       <td> {{ rev.item_rating }}</td>
       <td> {{ rev.text }}</td>
+      <td> {{ rev.seller.name }}</td>
+      <td> {{ rev.seller_rating }}</td>
     </tr>
   {% endfor %}
   </tbody>
@@ -219,6 +223,22 @@
    <input type="number" name="item_rating" min=1 max=5 />
    <br />
    <br />
+
+   <label>Seller (optional)</label>
+   <select name="seller_id" id="seller_id">
+     <option value = 'NONE' > None </option>
+      {% for seller in sellers %}
+      <option value = {{ seller.id }} > {{ seller.email }} </option>
+      {% endfor %}
+    </select>
+   <br />
+   <br />
+
+   <label>Seller Rating (optional)</label>
+   <input type="number" name="seller_rating" min=1 max=5 />
+   <br />
+   <br />
+
   <input type="submit" />
 </form>
 

@@ -131,10 +131,17 @@ def new_house():
 def add_review():
     user_id = request.args.get("user_id")
     item_id = request.args.get("item_id")
+    seller_id = request.args.get("seller_id")
     text = request.args.get("text")
     item_rating = request.args.get("item_rating")
 
-    review = Review(text,datetime.now(),item_rating)
+    review = Review(text,datetime.now(),item_rating,None)
+
+    if seller_id != 'NONE':
+        seller_rating = request.args.get("seller_rating")
+        review = Review(text,datetime.now(),item_rating,seller_rating)
+        review.seller = User.query.filter_by(id=seller_id).first()
+
     review.item = Item.query.filter_by(id=item_id).first()
     review.user = User.query.filter_by(id=user_id).first()
 

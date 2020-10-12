@@ -30,9 +30,15 @@ db_session.add(alice)
 bob = User('bob@gmail.com','12345','Bob',0,'Seller','440 Chapel Dr','Durham',27708,'NC')
 db_session.add(bob)
 
-review = Review('I love Batman!!!',datetime.now(),5)
+review = Review('I love Batman!!!',datetime.now(),5,None)
 review.item = bat
 review.user = alice
+db_session.add(review)
+
+review = Review('This cup leaks',datetime.now(),1,1)
+review.item = item
+review.user = alice
+review.seller = bob
 db_session.add(review)
 
 house = Warehouse('23 University Dr','Durham',27708,'NC',100)
