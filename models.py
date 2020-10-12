@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Table, ForeignKey, CheckConstraint, Text, Float
+from sqlalchemy import Column, Integer, String, Table, ForeignKey, CheckConstraint, Text, Float, DateTime
 from sqlalchemy.orm import relationship, backref
 from database import Base
 
@@ -12,6 +12,7 @@ class Item(Base):
     desc = Column(Text, unique=False)
     imgurl = Column(Text, unique=False,nullable=True)
     categories = relationship("InCat",back_populates="item",cascade="all, delete-orphan")
+    reviews = relationship("Review",back_populates="item",cascade="all, delete-orphan")
 
     def __init__(self, name=None, brand=None, color=None, size=None,desc=None,img=None):
         self.name = name
@@ -55,6 +56,7 @@ class User(Base):
     city = Column(String(20), unique=False)
     zip = Column(Integer, unique=False)
     state = Column(String(2), unique=False)
+    reviews = relationship("Review",back_populates="user",cascade="all, delete-orphan")
     __table_args__ = (
         CheckConstraint('type="User" OR type="Seller" OR type="Manager"'),{}
         )
@@ -85,3 +87,18 @@ class Warehouse(Base):
         self.zip = zip
         self.state = state
         self.capacity = capacity
+
+class Review(Base):
+    __tablename__ = 'reviews'
+    user_id = Column(Integer,ForeignKey('users.id'),primary_key=True)
+    item_id = Column(Integer,ForeignKey('items.id'),primary_key=True)
+    text = Column(Text, unique=False)
+    date = Column(DateTime, unique=False)
+    item_rating = Column(Integer, unique=False)
+    user = relationship("User",back_populates="reviews",uselist=False)
+    item = relationship("Item",back_populates="reviews",uselist=False)
+
+    def __init__(self,text=None,date=None,item_rating=None):
+        self.text = text
+        self.date = date
+        self.item_rating = item_rating

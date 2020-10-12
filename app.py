@@ -1,6 +1,7 @@
 from flask import Flask, request, redirect, url_for, render_template
 from models import *
 from database import db_session, engine
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -60,7 +61,8 @@ def test():
         warehouses = Warehouse.query.all(),
         cats = Category.query.all(),
         incats = InCat.query.all(),
-        items = Item.query.all()
+        items = Item.query.all(),
+        reviews = Review.query.all()
     )
 
 @app.route('/delete_item')
@@ -120,6 +122,22 @@ def new_house():
   db_session.commit()
 
   return redirect(url_for('test'))
+
+@app.route('/add_review')
+def add_review():
+    user_id = request.args.get("user_id")
+    item_id = request.args.get("item_id")
+    text = request.args.get("text")
+    item_rating = request.args.get("item_rating")
+
+    review = Review(text,datetime.now(),item_rating)
+    review.item = Item.query.filter_by(id=item_id).first()
+    review.user = User.query.filter_by(id=user_id).first()
+
+    db_session.add(review)
+    db_session.commit()
+
+    return redirect(url_for('test'))
 
 @app.route('/account')
 def account():

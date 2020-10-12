@@ -104,6 +104,8 @@
 </form>
 
 
+
+
 <h1>Testing Items/Categories Functionality</h1>
 <h3>Items</h3>
 <table>
@@ -166,6 +168,57 @@
     <option value = {{ cat.id }} > {{ cat.name }} </option>
     {% endfor %}
   </select>
+  <input type="submit" />
+</form>
+
+<h1>Testing Reviews Functionality</h1>
+<h3>Reviews</h3>
+<table>
+  <thead>
+    <th>User</th>
+    <th>Item</th>
+    <th>Date</th>
+    <th>Rating</th>
+    <th>Text</th>
+  </thead>
+  <tbody>
+  {% for rev in reviews %}
+    <tr>
+      <td> {{ rev.user.name }}</td>
+      <td> {{ rev.item.name }}</td>
+      <td> {{ rev.date.date() }}</td>
+      <td> {{ rev.item_rating }}</td>
+      <td> {{ rev.text }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<br /><br />
+
+<h2>Add Review<h2>
+<form action="/add_review" >
+ <select name="user_id" id="user_id">
+    {% for user in users %}
+    <option value = {{ user.id }} > {{ user.email }} </option>
+    {% endfor %}
+  </select>
+  <select name="item_id" id="item_id">
+     {% for item in items %}
+     <option value = {{ item.id }} > {{ item.name }} </option>
+     {% endfor %}
+   </select>
+   <br />
+   <br />
+
+   <label>Review Text</label><br />
+   <input type="text" name="text" />
+   <br />
+   <br />
+
+   <label>Item Rating</label>
+   <input type="number" name="item_rating" min=1 max=5 />
+   <br />
+   <br />
   <input type="submit" />
 </form>
 
