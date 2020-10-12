@@ -219,5 +219,10 @@ def orderHistory():
 def cart():
     return render_template('cart.html')
 
+@app.route('/search-results')
+def results():
+    return render_template('results.html')
+
+
 if __name__ == "__main__":
     app.run()

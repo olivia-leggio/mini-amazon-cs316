@@ -71,6 +71,15 @@ li a:hover, .dropdown:hover {
     top: 2%;
 }
 
+#searchbar {
+    position: absolute;
+    left: 37%;
+    top: 14%;
+}
+#searchtext {
+    position: absolute;
+    width: 600%;
+}
 
 #top-bar {
     position: relative;
