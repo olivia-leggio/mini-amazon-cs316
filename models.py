@@ -13,6 +13,7 @@ class Item(Base):
     imgurl = Column(Text, unique=False,nullable=True)
     categories = relationship("InCat",back_populates="item",cascade="all, delete-orphan")
     reviews = relationship("Review",back_populates="item",cascade="all, delete-orphan")
+    listings = relationship("Listing",back_populates="item",cascade="all, delete-orphan")
 
     def __init__(self, name=None, brand=None, color=None, size=None,desc=None,img=None):
         self.name = name
@@ -57,6 +58,7 @@ class User(Base):
     zip = Column(Integer, unique=False)
     state = Column(String(2), unique=False)
     reviews = relationship("Review",back_populates="user",cascade="all, delete-orphan")
+    listings = relationship("Listing",back_populates="seller",cascade="all, delete-orphan")
     __table_args__ = (
         CheckConstraint('type="User" OR type="Seller" OR type="Manager"'),{}
         )
@@ -80,6 +82,7 @@ class Warehouse(Base):
     zip = Column(Integer, unique=False)
     state = Column(String(2), unique=False)
     capacity = Column(Integer, unique=False)
+    listings = relationship("Listing",back_populates="warehouse",cascade="all, delete-orphan")
 
     def __init__(self,street=None,city=None,zip=None,state=None,capacity=None):
         self.street = street
@@ -102,3 +105,19 @@ class Review(Base):
         self.text = text
         self.date = date
         self.item_rating = item_rating
+
+class Listing(Base):
+    __tablename__ = 'listings'
+    id = Column(Integer, primary_key=True)
+    item_id = Column(Integer,ForeignKey('items.id'))
+    seller_id = Column(Integer,ForeignKey('users.id'))
+    warehouse_id = Column(Integer,ForeignKey('warehouses.id'))
+    price = Column(Float, unique = False)
+    amount = Column(Integer, unique = False)
+    seller = relationship("User",back_populates="listings",uselist=False)
+    item = relationship("Item",back_populates="listings",uselist=False)
+    warehouse = relationship("Warehouse",back_populates="listings",uselist=False)
+
+    def __init__(self,price=None,amount=None):
+        self.price = price
+        self.amount = amount

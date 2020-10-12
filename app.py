@@ -58,11 +58,13 @@ def test():
     return render_template(
         'test.html',
         users = User.query.all(),
+        sellers = User.query.filter_by(type="Seller"),
         warehouses = Warehouse.query.all(),
         cats = Category.query.all(),
         incats = InCat.query.all(),
         items = Item.query.all(),
-        reviews = Review.query.all()
+        reviews = Review.query.all(),
+        listings = Listing.query.all()
     )
 
 @app.route('/delete_item')
@@ -135,6 +137,24 @@ def add_review():
     review.user = User.query.filter_by(id=user_id).first()
 
     db_session.add(review)
+    db_session.commit()
+
+    return redirect(url_for('test'))
+
+@app.route('/add_listing')
+def add_listing():
+    seller_id = request.args.get("seller_id")
+    item_id = request.args.get("item_id")
+    wh_id = request.args.get("warehouse_id")
+    price = request.args.get("price")
+    amount = request.args.get("amount")
+
+    listing = Listing(price,amount)
+    listing.item = Item.query.filter_by(id=item_id).first()
+    listing.seller = User.query.filter_by(type="Seller").filter_by(id=seller_id).first()
+    listing.warehouse = Warehouse.query.filter_by(id=wh_id).first()
+
+    db_session.add(listing)
     db_session.commit()
 
     return redirect(url_for('test'))

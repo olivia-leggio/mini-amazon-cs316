@@ -38,6 +38,12 @@ db_session.add(review)
 house = Warehouse('23 University Dr','Durham',27708,'NC',100)
 db_session.add(house)
 
+l1 = Listing(19.99,20)
+l1.item = bat
+l1.seller = bob
+l1.warehouse = house
+db_session.add(l1)
+
 db_session.commit()
 
 print("DONE!")
