@@ -23,6 +23,7 @@
     <th>Brand</th>
     <th>Color</th>
     <th>Size</th>
+    <th>Description</th>
   </thead>
   <tbody>
   {% for item in items %}
@@ -31,6 +32,7 @@
       <td> {{ item.brand }}</td>
       <td> {{ item.color }}</td>
       <td> {{ item.size }}</td>
+      <td> {{ item.desc }}</td>
     </tr>
   {% endfor %}
   </tbody>
@@ -44,7 +46,7 @@
   <br />
   <br />
 
-  <label>Model</label><br />
+  <label>Brand</label><br />
   <input type="text" name="brand" />
   <br/>
   <br />
@@ -56,6 +58,11 @@
 
   <label>Size</label><br />
   <input type="number" name="size" />
+  <br />
+  <br />
+
+  <label>Description</label><br/>
+  <input type="text" name="desc" />
   <br />
   <br />
 

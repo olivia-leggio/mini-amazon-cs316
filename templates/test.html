@@ -5,6 +5,71 @@
 {% endblock %}
 
 {% block body %}
+<h1>Testing Users functionality</h1>
+<h3>Users</h3>
+<table>
+  <thead>
+    <th>id</th>
+    <th>email</th>
+    <th>name</th>
+    <th>type</th>
+    <th>password</th>
+    <th>balance</th>
+  </thead>
+  <tbody>
+  {% for user in users %}
+    <tr>
+      <td> {{ user.id }}</td>
+      <td> {{ user.email }}</td>
+      <td> {{ user.name }}</td>
+      <td> {{ user.type }}</td>
+      <td> {{ user.password }}</td>
+      <td> $ {{ user.balance }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<br /><br />
+
+<h2>Add a User<h2>
+<form action="/add_user" >
+  <label>User Name</label><br />
+  <input type="text" name="name" />
+  <br />
+  <br />
+
+  <label>Email</label><br />
+  <input type="text" name="email" />
+  <br/>
+  <br />
+
+  <label>Password</label><br />
+  <input type="text" name="password" />
+  <br />
+  <br />
+
+  <label>Type</label><br />
+  <select name="type" id="type">
+    <option value = "User">Normal User</option>
+    <option value = "Seller">Seller</option>
+    <option value = "Manager">Warehouse Manager</option>
+  </select>
+  <br />
+  <br />
+
+  <label>Address</label><br/>
+  <input type="text" name="street" placeholder = "Street"/>
+  <input type="text" name="city" placeholder = "City"/>
+  <input type="number" name="zip" placeholder = "Zip"/>
+  <input type="text" name="state" placeholder = "State (NC)"/>
+  <br />
+  <br />
+
+  <input type="submit" />
+</form>
+
+
+<h1>Testing Items/Categories Functionality</h1>
 <h3>Items</h3>
 <table>
   <thead>

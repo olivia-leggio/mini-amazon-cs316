@@ -39,9 +39,10 @@ def add_item():
   brand = request.args.get("brand")
   color = request.args.get("color")
   size = request.args.get("size")
+  desc = request.args.get("desc")
   cat = request.args.get("cat")
 
-  item = Item(name, brand, color, size)
+  item = Item(name, brand, color, size,desc,None)
   category = Category.query.filter_by(name=cat).first()
   assoc = InCat()
   assoc.cat = category
@@ -55,6 +56,7 @@ def add_item():
 def test():
     return render_template(
         'test.html',
+        users = User.query.all(),
         cats = Category.query.all(),
         incats = InCat.query.all(),
         items = Item.query.all()
@@ -86,6 +88,23 @@ def delete_cat():
     db_session.commit()
 
     return redirect(url_for('test'))
+
+@app.route('/add_user')
+def add_user():
+  name = request.args.get("name")
+  email = request.args.get("email")
+  password = request.args.get("password")
+  type = request.args.get("type")
+  street = request.args.get("street")
+  city = request.args.get("city")
+  zip = request.args.get("zip")
+  state = request.args.get("state")
+
+  user = User(email,password,name,0,type,street,city,zip,state)
+  db_session.add(user)
+  db_session.commit()
+
+  return redirect(url_for('test'))
 
 @app.route('/account')
 def account():

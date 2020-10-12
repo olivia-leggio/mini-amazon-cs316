@@ -11,17 +11,20 @@ db_session.add(toys)
 household = Category('Household')
 db_session.add(household)
 
-item = Item('Batman','DC','Black','2')
+item = Item('Batman','DC','Black',2,'A toy',None)
 assoc = InCat()
 assoc.cat = toys
 item.categories.append(assoc)
 db_session.add(item)
 
-item = Item('Cup','Solo','Red','1')
+item = Item('Cup','Solo','Red',1,'A cup',None)
 assoc = InCat()
 assoc.cat = household
 item.categories.append(assoc)
 db_session.add(item)
+
+user = User('alice@gmail.com','pass','Alice',0,'User','1 University Dr','Durham',27708,'NC')
+db_session.add(user)
 
 db_session.commit()
 
