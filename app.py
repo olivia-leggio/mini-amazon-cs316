@@ -64,7 +64,8 @@ def test():
         incats = InCat.query.all(),
         items = Item.query.all(),
         reviews = Review.query.all(),
-        listings = Listing.query.all()
+        listings = Listing.query.all(),
+        carts = Cart.query.all()
     )
 
 @app.route('/delete_item')
@@ -155,6 +156,21 @@ def add_listing():
     listing.warehouse = Warehouse.query.filter_by(id=wh_id).first()
 
     db_session.add(listing)
+    db_session.commit()
+
+    return redirect(url_for('test'))
+
+@app.route('/add_cart')
+def add_cart():
+    user_id = request.args.get("user_id")
+    listing_id = request.args.get("listing_id")
+    amount = request.args.get("amount")
+
+    cart = Cart(amount)
+    cart.listing = Listing.query.filter_by(id=listing_id).first()
+    cart.user = User.query.filter_by(id=user_id).first()
+
+    db_session.add(cart)
     db_session.commit()
 
     return redirect(url_for('test'))

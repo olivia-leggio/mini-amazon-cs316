@@ -44,6 +44,11 @@ l1.seller = bob
 l1.warehouse = house
 db_session.add(l1)
 
+c1 = Cart(5)
+c1.listing = l1
+c1.user = alice
+db_session.add(c1)
+
 db_session.commit()
 
 print("DONE!")

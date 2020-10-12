@@ -278,4 +278,47 @@
   <input type="submit" />
 </form>
 
+<h1>Testing Carts Functionality</h1>
+<h3>Carts</h3>
+<table>
+  <thead>
+    <th>user</th>
+    <th>Amount</th>
+    <th>listing_id</th>
+    <th>Item</th>
+    <th>Price</th>
+  </thead>
+  <tbody>
+  {% for cart in carts %}
+    <tr>
+      <td> {{ cart.user.name }}</td>
+      <td> {{ cart.amount }}</td>
+      <td> {{ cart.listing_id }}</td>
+      <td> {{ cart.listing.item.name }}</td>
+      <td> ${{ cart.listing.price }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<br /><br />
+
+<h2>Add to Cart<h2>
+<form action="/add_cart" >
+ <select name="user_id" id="user_id">
+    {% for u in users %}
+    <option value = {{ u.id }} > {{ u.email }} </option>
+    {% endfor %}
+  </select>
+  <select name="listing_id" id="listing_id">
+     {% for l in listings %}
+     <option value = {{ l.id }} > {{ l.id }}: {{ l.item.name }} {{ l.seller.name }} ${{ l.price}}</option>
+     {% endfor %}
+   </select>
+   <label>Amount</label>
+   <input type="number" name="amount" min=1 />
+   <br />
+   <br />
+  <input type="submit" />
+</form>
+
 {% endblock %}

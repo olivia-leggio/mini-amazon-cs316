@@ -59,6 +59,7 @@ class User(Base):
     state = Column(String(2), unique=False)
     reviews = relationship("Review",back_populates="user",cascade="all, delete-orphan")
     listings = relationship("Listing",back_populates="seller",cascade="all, delete-orphan")
+    carts = relationship("Cart",back_populates="user",cascade="all, delete-orphan")
     __table_args__ = (
         CheckConstraint('type="User" OR type="Seller" OR type="Manager"'),{}
         )
@@ -117,7 +118,19 @@ class Listing(Base):
     seller = relationship("User",back_populates="listings",uselist=False)
     item = relationship("Item",back_populates="listings",uselist=False)
     warehouse = relationship("Warehouse",back_populates="listings",uselist=False)
+    carts = relationship("Cart",back_populates="listing",cascade="all, delete-orphan")
 
     def __init__(self,price=None,amount=None):
         self.price = price
+        self.amount = amount
+
+class Cart(Base):
+    __tablename__ = 'carts'
+    user_id = Column(Integer,ForeignKey('users.id'),primary_key=True)
+    listing_id = Column(Integer,ForeignKey('listings.id'),primary_key=True)
+    amount = Column(Integer, unique = False)
+    user = relationship("User",back_populates="carts",uselist=False)
+    listing = relationship("Listing",back_populates="carts",uselist=False)
+
+    def __init__(self,amount=None):
         self.amount = amount
