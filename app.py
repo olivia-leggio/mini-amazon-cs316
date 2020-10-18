@@ -220,8 +220,8 @@ def cart():
     logged_in_id = id
     sql_get_cart = '''SELECT I.imgurl AS img, I.name AS name, L.price AS price, C.amount AS amount
                       FROM carts C, listings L, items I
-                      WHERE C.user_id = logged_in_id AND C.listing_id = L.id
-                      AND L.item_id = I.id'''
+                      WHERE C.user_id = {} AND C.listing_id = L.id
+                      AND L.item_id = I.id'''.format(logged_in_id)
 
     cart_items = engine.execute(sql_get_cart)
     
