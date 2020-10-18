@@ -221,8 +221,17 @@ def cart():
 
 @app.route('/search-results')
 def results():
-    return render_template('results.html')
+    query = request.args.get("searchtext")
+    
+    return render_template(
+        'results.html',
+        results = Item.query.filter(Item.name.like(query))       
+    )
 
+@app.route('/item')
+def items():
+    
+    return render_template('item.html')
 
 if __name__ == "__main__":
     app.run()
