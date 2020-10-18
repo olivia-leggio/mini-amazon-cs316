@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Mini Amazon</title>
+{% endblock %}
+
+{% block body %}
+<h1>Warehouse Info</h1>
+<h3>Choose Manager</h3>
+<form action="/warehouse" >
+  <select name="manager_id" id="manager_id">
+    <option value = "ALL"> All </option>
+    {% for m in managers %}
+    <option value = {{ m.id }} > {{ m.name }} </option>
+    {% endfor %}
+  </select>
+  <input type="submit" />
+</form>
+
+<h1>Orders to be completed in this warehouse</h1>
+<h3>Pending Orders</h3>
+<table>
+  <thead>
+    <th>Buyer</th>
+    <th>Item</th>
+    <th>Seller</th>
+    <th>Warehouse</th>
+    <th>Price</th>
+    <th>Amount</th>
+    <th>Date</th>
+    <th>Delivered?</th>
+  </thead>
+  <tbody>
+  {% for o in new_orders %}
+    <tr>
+      <td> {{ o.user.name }}</td>
+      <td> {{ o.seller.name }}</td>
+      <td> {{ o.item.name }}</td>
+      <td> {{ o.warehouse_id }}</td>
+      <td> ${{ o.price }}</td>
+      <td> {{ o.amount }}</td>
+      <td> {{ o.date.date() }}</td>
+      <td> {{ o.delivered }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<h1>Past Orders</h1>
+<h3>Past Orders</h3>
+<table>
+  <thead>
+    <th>Buyer</th>
+    <th>Item</th>
+    <th>Seller</th>
+    <th>Warehouse</th>
+    <th>Price</th>
+    <th>Amount</th>
+    <th>Date</th>
+    <th>Delivered?</th>
+  </thead>
+  <tbody>
+  {% for o in past_orders %}
+    <tr>
+      <td> {{ o.user.name }}</td>
+      <td> {{ o.seller.name }}</td>
+      <td> {{ o.item.name }}</td>
+      <td> {{ o.warehouse_id }}</td>
+      <td> ${{ o.price }}</td>
+      <td> {{ o.amount }}</td>
+      <td> {{ o.date.date() }}</td>
+      <td> {{ o.delivered }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
