@@ -287,5 +287,20 @@ def items():
 
     return render_template('item.html')
 
+@app.route('/seller')
+def sellerpage():
+    return render_template('seller.html',
+        users = User.query.all(),
+        sellers = User.query.filter_by(type="Seller", id=2),
+        warehouses = Warehouse.query.all(),
+        cats = Category.query.all(),
+        incats = InCat.query.all(),
+        items = Item.query.all(),
+        reviews = Review.query.all(),
+        listings = Listing.query.filter_by(seller_id=2),
+        carts = Cart.query.all(),
+        orders = Order.query.all()
+        )
+
 if __name__ == "__main__":
     app.run()
