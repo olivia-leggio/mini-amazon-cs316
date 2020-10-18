@@ -237,6 +237,19 @@ def wallet():
 
     return render_template('wallet.html', balance = balance)
 
+@app.route('/update_balance')
+def update_balance():
+    logged_in_id = id
+    to_add = request.args.get("added_balance")
+
+    sql_update_balance = '''UPDATE users
+                            SET balance = balance + {}
+                            WHERE id = {}'''.format(to_add, logged_in_id)
+
+    engine.execute(sql_update_balance)
+
+    return redirect(url_for('wallet'))
+
 @app.route('/history')
 def orderHistory():
     logged_in_id = id
