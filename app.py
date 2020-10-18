@@ -53,6 +53,25 @@ def add_item():
 
   return redirect(url_for('browse'))
 
+@app.route('/warehouse')
+def warehouse():
+    manager_id = request.args.get('manager_id','ALL')
+
+    if manager_id == 'ALL':
+        past_orders = Order.query.filter_by(delivered=True)
+        new_orders = Order.query.filter_by(delivered=False)
+    else:
+        manager = User.query.filter_by(id=manager_id).first()
+        past_orders = Order.query.filter_by(warehouse_id=manager.warehouse.warehouse_id).filter_by(delivered=True)
+        new_orders = Order.query.filter_by(warehouse_id=manager.warehouse.warehouse_id).filter_by(delivered=False)
+
+    return render_template(
+      'warehouse.html',
+      past_orders = past_orders,
+      new_orders = new_orders,
+      managers = User.query.filter_by(type='Manager')
+    )
+
 @app.route('/test')
 def test():
     return render_template(
@@ -222,15 +241,15 @@ def cart():
 @app.route('/search-results')
 def results():
     query = request.args.get("searchtext")
-    
+
     return render_template(
         'results.html',
-        results = Item.query.filter(Item.name.like(query))       
+        results = Item.query.filter(Item.name.like(query))
     )
 
 @app.route('/item')
 def items():
-    
+
     return render_template('item.html')
 
 if __name__ == "__main__":

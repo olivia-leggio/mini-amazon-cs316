@@ -65,7 +65,7 @@ class User(Base):
     orders_sell = relationship("Order",back_populates="seller",primaryjoin="User.id==Order.seller_id",cascade="all, delete-orphan")
     reviews_buy = relationship("Review",back_populates="user",primaryjoin="User.id==Review.user_id",cascade="all, delete-orphan")
     reviews_sell = relationship("Review",back_populates="seller",primaryjoin="User.id==Review.seller_id",cascade="all, delete-orphan")
-    warehouse = relationship("ManagerLocation",back_populates="manager",cascade="all, delete-orphan")
+    warehouse = relationship("ManagerLocation",back_populates="manager",uselist=False,cascade="all, delete-orphan")
     __table_args__ = (
         CheckConstraint('type="User" OR type="Seller" OR type="Manager"'),
         CheckConstraint('balance >= 0'),{}
