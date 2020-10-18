@@ -236,7 +236,15 @@ def orderHistory():
 
 @app.route('/cart')
 def cart():
-    return render_template('cart.html')
+    logged_in_id = id
+    sql_get_cart = '''SELECT I.imgurl AS img, I.name AS name, L.price AS price, C.amount AS amount
+                      FROM carts C, listings L, items I
+                      WHERE C.user_id = {} AND C.listing_id = L.id
+                      AND L.item_id = I.id'''.format(logged_in_id)
+
+    cart_items = engine.execute(sql_get_cart)
+    
+    return render_template('cart.html', items = cart_items)
 
 @app.route('/search-results')
 def results():

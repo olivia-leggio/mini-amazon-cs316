@@ -5,5 +5,23 @@
 {% endblock %}
 
 {% block body %}
-<h1>Cart</h1>
+<h3>Cart</h3>
+<table>
+    <thead>
+        <head>Picture</head>
+        <head>Item</head>
+        <head>Price</head>
+        <head>Quantity</head>
+    </thead>
+    <tbody>
+    {% for item in items %}
+        <tr>
+            <td>{{ item.img }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.amount }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
