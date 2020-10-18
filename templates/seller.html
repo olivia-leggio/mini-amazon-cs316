@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<h1>Seller</h1>
+
+<h2>Add a Listing</h2>
+<form action="/add_listing" >
+    <select name="seller_id" id="seller_id">
+       {% for s in sellers %}
+       <option value = {{ s.id }} > {{ s.email }} </option>
+       {% endfor %}
+     </select>
+     <select name="item_id" id="item_id">
+        {% for item in items %}
+        <option value = {{ item.id }} > {{ item.name }} </option>
+        {% endfor %}
+      </select>
+      <select name="warehouse_id" id="warehouse_id">
+         {% for wh in warehouses %}
+         <option value = {{ wh.id }} > {{ wh.id }} </option>
+         {% endfor %}
+       </select>
+      <br />
+      <br />
+      <label>Unit Price</label>
+      <input type="number" name="price" min=1 />
+      <br />
+      <br />
+      <label>Amount</label>
+      <input type="number" name="amount" min=1 />
+      <br />
+      <br />
+     <input type="submit" />
+   </form>
+
+<h2>Your Current Listings</h2>
+<table>
+    <thead>
+      <th>id</th>
+      <th>Item</th>
+      <th>Seller</th>
+      <th>Warehouse</th>
+      <th>Price</th>
+      <th>Amount</th>
+    </thead>
+    <tbody>
+    {% for l in listings %}
+      <tr>
+        <td> {{ l.id }}</td>
+        <td> {{ l.item.name }}</td>
+        <td> {{ l.seller.name }}</td>
+        <td> {{ l.warehouse.id }}</td>
+        <td> ${{ l.price }}</td>
+        <td> {{ l.amount }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+
+
+{% endblock %}
