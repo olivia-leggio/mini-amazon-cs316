@@ -228,7 +228,7 @@ def account():
 
 @app.route('/wallet')
 def wallet():
-    logged_in_id = id
+    logged_in_id = 1
     sql_get_balance = '''SELECT balance
                          FROM users
                          WHERE id = {}'''.format(logged_in_id)
