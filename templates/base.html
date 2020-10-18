@@ -32,9 +32,8 @@
             <img src = "{{ url_for('static', filename = 'img/logo1.png') }}" width = "68" height = "68" id = "logo">
         </a>
         <form id = "searchbar" action = "/search-results">
-            <input id = "searchtext" type = "text" name = "searchtext">
+            <input id = "searchquery" type = "text" name = "searchtext">
             <input id = "searchbutton" type = "submit" value = "search">
-            <!--<button type="submit"><i class="fa fa-search"></i></button>-->
         </form>
     </div>
     {% block body %}{% endblock %}
