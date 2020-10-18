@@ -29,18 +29,24 @@
     <th>Amount</th>
     <th>Date</th>
     <th>Delivered?</th>
+    <th>Mark</th>
   </thead>
   <tbody>
   {% for o in new_orders %}
     <tr>
       <td> {{ o.user.name }}</td>
-      <td> {{ o.seller.name }}</td>
       <td> {{ o.item.name }}</td>
+      <td> {{ o.seller.name }}</td>
       <td> {{ o.warehouse_id }}</td>
       <td> ${{ o.price }}</td>
       <td> {{ o.amount }}</td>
       <td> {{ o.date.date() }}</td>
       <td> {{ o.delivered }}</td>
+      <td>
+        <form action="/markdelivered">
+          <button type="submit" name="order_id" value= {{ o.id}} >Mark Delivered</button>
+        </form>
+      </td>
     </tr>
   {% endfor %}
   </tbody>

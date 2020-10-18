@@ -72,6 +72,81 @@ def warehouse():
       managers = User.query.filter_by(type='Manager')
     )
 
+@app.route('/markdelivered')
+def markdelivered():
+    order_id = request.args.get('order_id')
+    order = Order.query.filter_by(id=order_id).first()
+    order.delivered = True
+
+    db_session.commit()
+
+    return redirect(url_for('warehouse'))
+
+@app.route('/account')
+def account():
+    return render_template('account.html')
+
+@app.route('/wallet')
+def wallet():
+    logged_in_id = 1
+    sql_get_balance = '''SELECT balance
+                         FROM users
+                         WHERE id = {}'''.format(logged_in_id)
+
+    balance = engine.execute(sql_get_balance)
+
+    return render_template('wallet.html', balance = balance)
+
+@app.route('/update_balance')
+def update_balance():
+    logged_in_id = 1
+    to_add = request.args.get("added_balance")
+
+    sql_update_balance = '''UPDATE users
+                            SET balance = balance + {}
+                            WHERE id = {}'''.format(to_add, logged_in_id)
+
+    engine.execute(sql_update_balance)
+
+    return redirect(url_for('wallet'))
+
+@app.route('/history')
+def orderHistory():
+    logged_in_id = 1
+    sql_get_history = '''SELECT item_id AS id, delivered, amount
+                         FROM orders
+                         WHERE user_id = {}'''.format(logged_in_id)
+
+    history_items = engine.execute(sql_get_history)
+
+    return render_template('order-history.html', items = history_items)
+
+@app.route('/cart')
+def cart():
+    logged_in_id = id
+    sql_get_cart = '''SELECT I.imgurl AS img, I.name AS name, L.price AS price, C.amount AS amount
+                      FROM carts C, listings L, items I
+                      WHERE C.user_id = {} AND C.listing_id = L.id
+                      AND L.item_id = I.id'''.format(logged_in_id)
+
+    cart_items = engine.execute(sql_get_cart)
+
+    return render_template('cart.html', items = cart_items)
+
+@app.route('/search-results')
+def results():
+    query = request.args.get("searchtext")
+
+    return render_template(
+        'results.html',
+        results = Item.query.filter(Item.name.like(query))
+    )
+
+@app.route('/item')
+def items():
+
+    return render_template('item.html')
+
 @app.route('/test')
 def test():
     return render_template(
@@ -220,72 +295,6 @@ def process_checkout():
     db_session.delete(cart)
     db_session.commit()
     return redirect(url_for('test'))
-
-
-@app.route('/account')
-def account():
-    return render_template('account.html')
-
-@app.route('/wallet')
-def wallet():
-    logged_in_id = 1
-    sql_get_balance = '''SELECT balance
-                         FROM users
-                         WHERE id = {}'''.format(logged_in_id)
-
-    balance = engine.execute(sql_get_balance)
-
-    return render_template('wallet.html', balance = balance)
-
-@app.route('/update_balance')
-def update_balance():
-    logged_in_id = 1
-    to_add = request.args.get("added_balance")
-
-    sql_update_balance = '''UPDATE users
-                            SET balance = balance + {}
-                            WHERE id = {}'''.format(to_add, logged_in_id)
-
-    engine.execute(sql_update_balance)
-
-    return redirect(url_for('wallet'))
-
-@app.route('/history')
-def orderHistory():
-    logged_in_id = 1
-    sql_get_history = '''SELECT item_id AS id, delivered, amount
-                         FROM orders
-                         WHERE user_id = {}'''.format(logged_in_id)
-    
-    history_items = engine.execute(sql_get_history)
-
-    return render_template('order-history.html', items = history_items)
-
-@app.route('/cart')
-def cart():
-    logged_in_id = id
-    sql_get_cart = '''SELECT I.imgurl AS img, I.name AS name, L.price AS price, C.amount AS amount
-                      FROM carts C, listings L, items I
-                      WHERE C.user_id = {} AND C.listing_id = L.id
-                      AND L.item_id = I.id'''.format(logged_in_id)
-
-    cart_items = engine.execute(sql_get_cart)
-    
-    return render_template('cart.html', items = cart_items)
-
-@app.route('/search-results')
-def results():
-    query = request.args.get("searchtext")
-
-    return render_template(
-        'results.html',
-        results = Item.query.filter(Item.name.like(query))
-    )
-
-@app.route('/item')
-def items():
-
-    return render_template('item.html')
 
 if __name__ == "__main__":
     app.run()

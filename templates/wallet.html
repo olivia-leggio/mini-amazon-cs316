@@ -8,7 +8,7 @@
 <h3>Your balance is {{ balance[0] }}</h3>
 
 <form action = "/update_balance">
-    <input type = "number" name = "added_balance">
+    <input type = "number" name = "added_balance" step = 0.01>
     <input type = "submit" value = "add balance">
 </form>
 {% endblock %}
