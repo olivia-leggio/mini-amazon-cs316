@@ -228,11 +228,25 @@ def account():
 
 @app.route('/wallet')
 def wallet():
-    return render_template('wallet.html')
+    logged_in_id = id
+    sql_get_balance = '''SELECT balance
+                         FROM users
+                         WHERE id = {}'''.format(logged_in_id)
+
+    balance = engine.execute(sql_get_balance)
+
+    return render_template('wallet.html', balance = balance)
 
 @app.route('/history')
 def orderHistory():
-    return render_template('order-history.html')
+    logged_in_id = id
+    sql_get_history = '''SELECT item_id AS id, delivered, amount
+                         FROM orders
+                         WHERE user_id = {}'''.format(logged_in_id)
+    
+    history_items = engine.execute(sql_get_history)
+
+    return render_template('order-history.html', items = history_items)
 
 @app.route('/cart')
 def cart():

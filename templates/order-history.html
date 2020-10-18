@@ -5,5 +5,29 @@
 {% endblock %}
 
 {% block body %}
-<h1>Order History</h1>
+<h3>Order History</h3>
+<table>
+    <thead>
+        <head>Item Id</head>
+        <head>Delivered</head>
+        <head>Quantity</head>
+    </thead>
+    <tbody>
+    {% for item in items %}
+        {% if item.delivered %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>delivered</td>
+                <td>{{ item.amount }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>in progress</td>
+                <td>{{ item.amount }}</td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
