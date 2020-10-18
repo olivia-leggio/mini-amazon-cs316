@@ -22,4 +22,3 @@ def init_db():
     Base.metadata.drop_all(bind=engine)
     import models
     Base.metadata.create_all(bind=engine)
-    clear_data(db_session)

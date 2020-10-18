@@ -239,7 +239,7 @@ def wallet():
 
 @app.route('/update_balance')
 def update_balance():
-    logged_in_id = id
+    logged_in_id = 1
     to_add = request.args.get("added_balance")
 
     sql_update_balance = '''UPDATE users
@@ -252,7 +252,7 @@ def update_balance():
 
 @app.route('/history')
 def orderHistory():
-    logged_in_id = id
+    logged_in_id = 1
     sql_get_history = '''SELECT item_id AS id, delivered, amount
                          FROM orders
                          WHERE user_id = {}'''.format(logged_in_id)
