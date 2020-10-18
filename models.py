@@ -65,6 +65,7 @@ class User(Base):
     orders_sell = relationship("Order",back_populates="seller",primaryjoin="User.id==Order.seller_id",cascade="all, delete-orphan")
     reviews_buy = relationship("Review",back_populates="user",primaryjoin="User.id==Review.user_id",cascade="all, delete-orphan")
     reviews_sell = relationship("Review",back_populates="seller",primaryjoin="User.id==Review.seller_id",cascade="all, delete-orphan")
+    warehouse = relationship("ManagerLocation",back_populates="manager",cascade="all, delete-orphan")
     __table_args__ = (
         CheckConstraint('type="User" OR type="Seller" OR type="Manager"'),
         CheckConstraint('balance >= 0'),{}
@@ -91,6 +92,7 @@ class Warehouse(Base):
     capacity = Column(Integer, unique=False)
     listings = relationship("Listing",back_populates="warehouse",cascade="all, delete-orphan")
     orders = relationship("Order",back_populates="warehouse",cascade="all, delete-orphan")
+    manager = relationship("ManagerLocation",back_populates="warehouse",cascade="all, delete-orphan")
 
     def __init__(self,street=None,city=None,zip=None,state=None,capacity=None):
         self.street = street
@@ -174,3 +176,10 @@ class Order(Base):
         self.delivered = delivered
         self.price = price
         self.amount = amount
+
+class ManagerLocation(Base):
+    __tablename__ = 'locations'
+    warehouse_id = Column(Integer,ForeignKey('warehouses.id'), primary_key=True)
+    manager_id = Column(Integer,ForeignKey('users.id'))
+    warehouse = relationship("Warehouse",back_populates="manager",uselist=False)
+    manager = relationship("User",back_populates="warehouse",uselist=False)

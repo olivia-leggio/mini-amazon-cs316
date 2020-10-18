@@ -30,6 +30,9 @@ db_session.add(alice)
 bob = User('bob@gmail.com','12345','Bob',0,'Seller','440 Chapel Dr','Durham',27708,'NC')
 db_session.add(bob)
 
+carol = User('carol@gmail.com','superman','Carol',0,'Manager','440 Chapel Dr','Durham',27708,'NC')
+db_session.add(carol)
+
 review = Review('I love Batman!!!',datetime.now(),5,None)
 review.item = bat
 review.user = alice
@@ -61,6 +64,11 @@ o1.seller = bob
 o1.item = bat
 o1.warehouse = house
 db_session.add(o1)
+
+ml = ManagerLocation()
+ml.manager = carol
+ml.warehouse = house
+db_session.add(ml)
 
 db_session.commit()
 
