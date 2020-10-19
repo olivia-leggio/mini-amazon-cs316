@@ -113,9 +113,9 @@ def update_balance():
 @app.route('/history')
 def orderHistory():
     logged_in_id = 1
-    sql_get_history = '''SELECT item_id AS id, delivered, amount
-                         FROM orders
-                         WHERE user_id = {}'''.format(logged_in_id)
+    sql_get_history = '''SELECT I.name AS name, delivered, amount
+                         FROM orders O, items I
+                         WHERE user_id = {} AND item_id = I.id'''.format(logged_in_id)
 
     history_items = engine.execute(sql_get_history)
 
@@ -123,7 +123,7 @@ def orderHistory():
 
 @app.route('/cart')
 def cart():
-    logged_in_id = id
+    logged_in_id = 1
     sql_get_cart = '''SELECT I.imgurl AS img, I.name AS name, L.price AS price, C.amount AS amount
                       FROM carts C, listings L, items I
                       WHERE C.user_id = {} AND C.listing_id = L.id

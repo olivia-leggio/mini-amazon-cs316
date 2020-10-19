@@ -5,7 +5,10 @@
 {% endblock %}
 
 {% block body %}
-<h3>Your balance is {{ balance[0] }}</h3>
+<!--no idea why I have to put this as a loop to make it work-->
+{% for entry in balance %}
+    <h3>Your balance is {{ entry.balance }}</h3>
+{% endfor %}
 
 <form action = "/update_balance">
     <input type = "number" name = "added_balance" step = 0.01>

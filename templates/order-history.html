@@ -16,13 +16,13 @@
     {% for item in items %}
         {% if item.delivered %}
             <tr>
-                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
                 <td>delivered</td>
                 <td>{{ item.amount }}</td>
             </tr>
         {% else %}
             <tr>
-                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
                 <td>in progress</td>
                 <td>{{ item.amount }}</td>
             </tr>
