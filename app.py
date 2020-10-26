@@ -1,10 +1,12 @@
-from flask import Flask, request, redirect, url_for, render_template
+from flask import Flask, request, redirect, url_for, render_template, session
 from models import *
 from database import db_session, engine
 from datetime import datetime
+import secrets
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.config['SECRET_KEY'] = secrets.token_urlsafe(15)
 
 
 @app.route('/')
@@ -15,15 +17,24 @@ def index():
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['username'] != 'admin' or request.form['password'] != 'admin':
+        input_email = request.form['username']
+        input_pw = request.form['password']
+        user = User.query.filter_by(email = input_email).first()
+        if user is None or user.password != input_pw:
             error = 'Invalid Credentials. Please try again.'
         else:
+            session["USERID"] = user.id
             return redirect(url_for('index'))
     return render_template('login.html', error=error)
 
 
 @app.route('/browse')
 def browse():
+  me_id = session.get("USERID")
+  print(me_id)
+  if me_id is None:
+      return redirect(url_for('login'))
+
   cat = request.args.get('cat','ALL')
   incats = InCat.query.join(Category).filter_by(name=cat)
 
@@ -42,7 +53,8 @@ def browse():
     'browse.html',
     cats = Category.query.all(),
     incats = incats,
-    items = items
+    items = items,
+    me = User.query.filter_by(id=me_id).first()
   )
 
 @app.route('/add_item')
