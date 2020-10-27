@@ -18,8 +18,8 @@
     <th>Price</th>
     <th>Amount</th>
     <th>Date</th>
-    <th>Delivered?</th>
-    <th>Mark</th>
+    <th>Deliver</th>
+    <th>Cancel</th>
   </thead>
   <tbody>
   {% for o in new_orders %}
@@ -31,10 +31,14 @@
       <td> ${{ o.price }}</td>
       <td> {{ o.amount }}</td>
       <td> {{ o.date.date() }}</td>
-      <td> {{ o.delivered }}</td>
       <td>
         <form action="/markdelivered">
           <button type="submit" name="order_id" value= {{ o.id}} >Mark Delivered</button>
+        </form>
+      </td>
+      <td>
+        <form action="/return_order">
+          <button type="submit" name="order_id" value= {{ o.id}} >Cancel Order</button>
         </form>
       </td>
     </tr>
@@ -53,7 +57,7 @@
     <th>Price</th>
     <th>Amount</th>
     <th>Date</th>
-    <th>Delivered?</th>
+    <th>Return</th>
   </thead>
   <tbody>
   {% for o in past_orders %}
@@ -65,7 +69,11 @@
       <td> ${{ o.price }}</td>
       <td> {{ o.amount }}</td>
       <td> {{ o.date.date() }}</td>
-      <td> {{ o.delivered }}</td>
+      <td>
+        <form action="/return_order">
+          <button type="submit" name="order_id" value= {{ o.id}} >Return Item</button>
+        </form>
+      </td>
     </tr>
   {% endfor %}
   </tbody>

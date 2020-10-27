@@ -171,7 +171,7 @@ class Order(Base):
     item = relationship("Item",back_populates="orders",uselist=False)
     warehouse = relationship("Warehouse",back_populates="orders",uselist=False)
 
-    def __init__(self,date=None,delivered=None,price=None,amount=None):
+    def __init__(self,date=None,delivered=False,price=None,amount=None):
         self.date = date
         self.delivered = delivered
         self.price = price

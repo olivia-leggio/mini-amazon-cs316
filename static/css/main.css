@@ -91,9 +91,6 @@ h1 {
 }
 
 /* Bordered form */
-form {
-  border: 3px solid #f1f1f1;
-}
 
 /* Full-width inputs */
 input[type=text], input[type=password] {
@@ -101,7 +98,6 @@ input[type=text], input[type=password] {
   padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;
-  border: 1px solid #ccc;
   box-sizing: border-box;
 }
 

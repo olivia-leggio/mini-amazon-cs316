@@ -112,16 +112,31 @@ def markdelivered():
 
     return redirect(url_for('warehouse'))
 
+@app.route('/return_order')
+def return_order():
+    order_id = request.args.get('order_id')
+    order = Order.query.filter_by(id=order_id).first()
+    money = order.price * order.amount
+    order.user.balance = order.user.balance + money
+    order.seller.balance = order.seller.balance - money
+
+    db_session.delete(order)
+    db_session.commit()
+    return redirect(url_for('warehouse'))
+
 @app.route('/account')
 def account():
     return render_template('account.html')
 
 @app.route('/wallet')
 def wallet():
-    logged_in_id = 1
+    me_id = session.get("USERID")
+    if me_id is None:
+        return redirect(url_for('login'))
+
     sql_get_balance = '''SELECT balance
                          FROM users
-                         WHERE id = {}'''.format(logged_in_id)
+                         WHERE id = {}'''.format(me_id)
 
     balance = engine.execute(sql_get_balance)
 
@@ -129,12 +144,15 @@ def wallet():
 
 @app.route('/update_balance')
 def update_balance():
-    logged_in_id = 1
+    me_id = session.get("USERID")
+    if me_id is None:
+        return redirect(url_for('login'))
+
     to_add = request.args.get("added_balance")
 
     sql_update_balance = '''UPDATE users
                             SET balance = balance + {}
-                            WHERE id = {}'''.format(to_add, logged_in_id)
+                            WHERE id = {}'''.format(to_add, me_id)
 
     engine.execute(sql_update_balance)
 
@@ -142,10 +160,13 @@ def update_balance():
 
 @app.route('/history')
 def orderHistory():
-    logged_in_id = 1
+    me_id = session.get("USERID")
+    if me_id is None:
+        return redirect(url_for('login'))
+
     sql_get_history = '''SELECT I.name AS name, delivered, amount
                          FROM orders O, items I
-                         WHERE user_id = {} AND item_id = I.id'''.format(logged_in_id)
+                         WHERE user_id = {} AND item_id = I.id'''.format(me_id)
 
     history_items = engine.execute(sql_get_history)
 
@@ -153,11 +174,14 @@ def orderHistory():
 
 @app.route('/cart')
 def cart():
-    logged_in_id = 1
+    me_id = session.get("USERID")
+    if me_id is None:
+        return redirect(url_for('login'))
+
     sql_get_cart = '''SELECT I.imgurl AS img, I.name AS name, L.price AS price, C.amount AS amount
                       FROM carts C, listings L, items I
                       WHERE C.user_id = {} AND C.listing_id = L.id
-                      AND L.item_id = I.id'''.format(logged_in_id)
+                      AND L.item_id = I.id'''.format(me_id)
 
     cart_items = engine.execute(sql_get_cart)
 
