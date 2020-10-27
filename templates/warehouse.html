@@ -5,17 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<h1>Warehouse Info</h1>
-<h3>Choose Manager</h3>
-<form action="/warehouse" >
-  <select name="manager_id" id="manager_id">
-    <option value = "ALL"> All </option>
-    {% for m in managers %}
-    <option value = {{ m.id }} > {{ m.name }} </option>
-    {% endfor %}
-  </select>
-  <input type="submit" />
-</form>
+<h1>You are {{ me.name }}, viewing Warehouse {{ warehouse.id }}</h1>
 
 <h1>Orders to be completed in this warehouse</h1>
 <h3>Pending Orders</h3>

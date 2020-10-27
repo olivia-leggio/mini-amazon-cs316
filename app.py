@@ -76,23 +76,30 @@ def add_item():
 
   return redirect(url_for('browse'))
 
+@app.route('/denied')
+def denied():
+     return render_template('denied.html')
+
 @app.route('/warehouse')
 def warehouse():
-    manager_id = request.args.get('manager_id','ALL')
+    me_id = session.get("USERID")
+    if me_id is None:
+        return redirect(url_for('login'))
 
-    if manager_id == 'ALL':
-        past_orders = Order.query.filter_by(delivered=True)
-        new_orders = Order.query.filter_by(delivered=False)
-    else:
-        manager = User.query.filter_by(id=manager_id).first()
-        past_orders = Order.query.filter_by(warehouse_id=manager.warehouse.warehouse_id).filter_by(delivered=True)
-        new_orders = Order.query.filter_by(warehouse_id=manager.warehouse.warehouse_id).filter_by(delivered=False)
+    me = User.query.filter_by(id=me_id).first()
+
+    if me.type != 'Manager':
+        return redirect(url_for('denied'))
+
+    past_orders = Order.query.filter_by(warehouse_id=me.warehouse.warehouse_id).filter_by(delivered=True)
+    new_orders = Order.query.filter_by(warehouse_id=me.warehouse.warehouse_id).filter_by(delivered=False)
 
     return render_template(
       'warehouse.html',
       past_orders = past_orders,
       new_orders = new_orders,
-      managers = User.query.filter_by(type='Manager')
+      me = me,
+      warehouse = Warehouse.query.filter_by(id=me.warehouse.warehouse_id).first()
     )
 
 @app.route('/markdelivered')
