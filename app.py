@@ -203,6 +203,15 @@ def items():
 
 @app.route('/seller')
 def sellerpage():
+    me_id = session.get("USERID")
+    if me_id is None:
+        return redirect(url_for('login'))
+
+    me = User.query.filter_by(id=me_id).first()
+
+    if me.type != 'Seller':
+        return redirect(url_for('denied'))
+
     return render_template('seller.html',
         users = User.query.all(),
         sellers = User.query.filter_by(type="Seller", id=2),
