@@ -3,7 +3,28 @@
 {% block body %}
 <h1>Seller</h1>
 
-<h2>Add a Listing</h2>
+<h2>Your Current Listings</h2>
+<table>
+    <thead>
+
+      <th>Item</th>
+      <th>Price</th>
+      <th>Amount</th>
+      <th>Warehouse</th>
+    </thead>
+    <tbody>
+    {% for l in listings %}
+      <tr>
+        <td> {{ l.item.name }}</td>
+        <td> ${{ l.price }}</td>
+        <td> {{ l.amount }}</td>
+        <td> {{ l.warehouse.id }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+<!-- <h2>Add a Listing</h2>
 <form action="/add_listing" >
     <select name="seller_id" id="seller_id">
        {% for s in sellers %}
@@ -31,31 +52,9 @@
       <br />
       <br />
      <input type="submit" />
-   </form>
+   </form> -->
 
-<h2>Your Current Listings</h2>
-<table>
-    <thead>
-      <th>id</th>
-      <th>Item</th>
-      <th>Seller</th>
-      <th>Warehouse</th>
-      <th>Price</th>
-      <th>Amount</th>
-    </thead>
-    <tbody>
-    {% for l in listings %}
-      <tr>
-        <td> {{ l.id }}</td>
-        <td> {{ l.item.name }}</td>
-        <td> {{ l.seller.name }}</td>
-        <td> {{ l.warehouse.id }}</td>
-        <td> ${{ l.price }}</td>
-        <td> {{ l.amount }}</td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+
 
 
 

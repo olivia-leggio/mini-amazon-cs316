@@ -202,7 +202,7 @@ def items():
     return render_template('item.html')
 
 @app.route('/seller')
-def sellerpage():
+def  sellerpage():
     me_id = session.get("USERID")
     if me_id is None:
         return redirect(url_for('login'))
@@ -212,6 +212,9 @@ def sellerpage():
     if me.type != 'Seller':
         return redirect(url_for('denied'))
 
+    seller_listings = Listing.query.filter_by(seller_id=me_id).all()
+
+
     return render_template('seller.html',
         users = User.query.all(),
         sellers = User.query.filter_by(type="Seller", id=2),
@@ -220,7 +223,7 @@ def sellerpage():
         incats = InCat.query.all(),
         items = Item.query.all(),
         reviews = Review.query.all(),
-        listings = Listing.query.filter_by(seller_id=2),
+        listings = seller_listings,
         carts = Cart.query.all(),
         orders = Order.query.all()
         )
