@@ -5,5 +5,24 @@
 {% endblock %}
 
 {% block body %}
-<h1>Account Page</h1>
+<h1>Welcome, {{ user.name }}</h1>
+<ul>
+    <li>Account Type: {{ user.type }}</li>
+    <li>Email: {{ user.email }}</li>
+    <li>Address: {{ user.street }}  {{ user.city }}, {{ user.state }} {{ user.zip }}</li>
+</ul>
+<br>
+<button onclick = "checkPassword()">update your information</button>
+
+<script>
+    function checkPassword() {
+        var confirmPass = prompt("Confirm your password");
+        if (confirmPass == "{{ user.password }}") {
+            window.alert("correct!");
+        }
+        else {
+            window.alert("incorrect password");
+        }
+    }
+</script>
 {% endblock %}

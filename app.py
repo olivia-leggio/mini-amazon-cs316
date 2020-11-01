@@ -126,7 +126,14 @@ def return_order():
 
 @app.route('/account')
 def account():
-    return render_template('account.html')
+    me_id = session.get('USERID')
+    if me_id is None:
+        return redirect(url_for('login'))
+    
+    user = User.query.filter_by(id = me_id).first()
+
+    return render_template('account.html', user = user)
+
 
 @app.route('/wallet')
 def wallet():
