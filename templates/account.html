@@ -2,11 +2,27 @@
 
 {% block head %}
 <title>My Account</title>
+
+<style>
+    #noEdit {
+        display: block;
+    }
+    #editing {
+        display: none;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
 <h1>Welcome, {{ user.name }}</h1>
-<ul>
+<ul id = "noEdit">
+    <li>Account Type: {{ user.type }}</li>
+    <li>Email: {{ user.email }}</li>
+    <li>Address: {{ user.street }}  {{ user.city }}, {{ user.state }} {{ user.zip }}</li>
+</ul>
+
+<ul id = "editing">
+    <li>THIS IS THE NEW LIST</li>
     <li>Account Type: {{ user.type }}</li>
     <li>Email: {{ user.email }}</li>
     <li>Address: {{ user.street }}  {{ user.city }}, {{ user.state }} {{ user.zip }}</li>
@@ -18,7 +34,11 @@
     function checkPassword() {
         var confirmPass = prompt("Confirm your password");
         if (confirmPass == "{{ user.password }}") {
-            window.alert("correct!");
+            var oldList = document.getElementById("noEdit");
+            var newList = document.getElementById("editing");
+
+            oldList.style.display = "none";
+            newList.style.display = "block";
         }
         else {
             window.alert("incorrect password");
