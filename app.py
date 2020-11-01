@@ -212,20 +212,12 @@ def  sellerpage():
     if me.type != 'Seller':
         return redirect(url_for('denied'))
 
-    seller_listings = Listing.query.filter_by(seller_id=me_id).all()
-
-
     return render_template('seller.html',
-        users = User.query.all(),
-        sellers = User.query.filter_by(type="Seller", id=2),
+        seller = me,
+        listings = Listing.query.filter_by(seller_id=me_id).all(),
         warehouses = Warehouse.query.all(),
         cats = Category.query.all(),
-        incats = InCat.query.all(),
-        items = Item.query.all(),
-        reviews = Review.query.all(),
-        listings = seller_listings,
-        carts = Cart.query.all(),
-        orders = Order.query.all()
+        items = Item.query.all()
         )
 
 @app.route('/test')
@@ -327,7 +319,16 @@ def add_review():
 
 @app.route('/add_listing')
 def add_listing():
-    seller_id = request.args.get("seller_id")
+    me_id = session.get("USERID")
+    if me_id is None:
+        return redirect(url_for('login'))
+
+    me = User.query.filter_by(id=me_id).first()
+
+    if me.type != 'Seller':
+        return redirect(url_for('denied'))
+        
+    seller_id = me_id
     item_id = request.args.get("item_id")
     wh_id = request.args.get("warehouse_id")
     price = request.args.get("price")
