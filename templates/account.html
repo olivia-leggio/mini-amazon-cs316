@@ -27,18 +27,42 @@
 <div id = "editing">
     <form>
         <label for = "uEmail">Change Email</label>
-        <input id = "uEmail" type = "text" value = {{ user.email }} name = "updatedEmail">
+        <input id = "uEmail" type = "text" placeholder = {{ user.email }} name = "updatedEmail">
 
         <label for = "uPass">Change Password</label>
-        <input id = "uPass" type = "text" value = "" name = "updatedPassword">
+        <input id = "uPass" type = "text" placeholder = " " name = "updatedPassword">
+            <!--can change to type = "password"-->
+
+        <label for = "uAddress">Change Address</label>
+        <div id = "uAddress">
+            <input type = "text" placeholder = "{{ user.street }}" name = "updatedStreet">
+            <input type = "text" placeholder = {{ user.city }} name = "updatedCity">
+            <!-- <input type = "text" placeholder = {{ user.state }} name = "updatedState"> -->
+            <select id = "stateSelect" name = "updatedState">
+                <option value = "" disabled selected>{{ user.state }}</option>
+                {% for state in ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "FL", "GA", 
+                "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MD", "ME", 
+                "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
+                "NC", "ND", "NM", "NY", "OH", "OK", "OR", "PA", "RI", "SC", 
+                "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY"] %}
+                <option value = {{ state }}>{{ state }}</option>
+                {% endfor %}
+            </select>
+            <input type = "text" placeholder = {{ user.zip }} name = "updatedZip">
+        </div>
     </form>
 </div>
 <br>
 <button id = "done_button" onclick = "location.href = '/account'">done</button>
-<button id = "edit_button" onclick = "checkPassword()">update your information</button>
+<button id = "edit_button" onclick = "runScripts()">update your information</button>
 
 
+<!--scripts embedded here for the jinja values, may change later and move to separate js file-->
 <script>
+    function runScripts() {
+        checkPassword();
+        processPassword();
+    }
     function checkPassword() {
         var confirmPass = prompt("Confirm your password");
         if (confirmPass == "{{ user.password }}") {
@@ -53,17 +77,17 @@
             doneButton.style.display = "block";
         }
         else {
-            window.alert("incorrect password");
+            window.alert("incorrect password, please try again");
         }
     }
     function processPassword() {
         var password = "{{ user.password }}";
-        var outString;
+        var outString = "";
         for (i = 0; i < password.length; i++) {
             outString += "*";
         }
         var passBox = document.getElementById("uPass");
-        passBox.setAttribute("value", outString);
+        passBox.setAttribute("placeholder", outString);
     }
 </script>
 {% endblock %}
