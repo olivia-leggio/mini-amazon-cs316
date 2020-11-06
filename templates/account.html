@@ -10,9 +10,12 @@
     #editing {
         display: none;
     }
+    #done_button {
+        display: none;
+    }
 </style>
 {% endblock %}
-
+<!---------------------------------------------------------------------------------------------------------------->
 {% block body %}
 <h1>Welcome, {{ user.name }}</h1>
 <ul id = "noEdit">
@@ -20,15 +23,20 @@
     <li>Email: {{ user.email }}</li>
     <li>Address: {{ user.street }}  {{ user.city }}, {{ user.state }} {{ user.zip }}</li>
 </ul>
+<!---------------------------------------------------------------------------------------------------------------->
+<div id = "editing">
+    <form>
+        <label for = "uEmail">Change Email</label>
+        <input id = "uEmail" type = "text" value = {{ user.email }} name = "updatedEmail">
 
-<ul id = "editing">
-    <li>THIS IS THE NEW LIST</li>
-    <li>Account Type: {{ user.type }}</li>
-    <li>Email: {{ user.email }}</li>
-    <li>Address: {{ user.street }}  {{ user.city }}, {{ user.state }} {{ user.zip }}</li>
-</ul>
+        <label for = "uPass">Change Password</label>
+        <input id = "uPass" type = "text" value = "" name = "updatedPassword">
+    </form>
+</div>
 <br>
-<button onclick = "checkPassword()">update your information</button>
+<button id = "done_button" onclick = "location.href = '/account'">done</button>
+<button id = "edit_button" onclick = "checkPassword()">update your information</button>
+
 
 <script>
     function checkPassword() {
@@ -36,13 +44,26 @@
         if (confirmPass == "{{ user.password }}") {
             var oldList = document.getElementById("noEdit");
             var newList = document.getElementById("editing");
+            var editButton = document.getElementById("edit_button");
+            var doneButton = document.getElementById("done_button");
 
             oldList.style.display = "none";
             newList.style.display = "block";
+            editButton.style.display = "none";
+            doneButton.style.display = "block";
         }
         else {
             window.alert("incorrect password");
         }
+    }
+    function processPassword() {
+        var password = "{{ user.password }}";
+        var outString;
+        for (i = 0; i < password.length; i++) {
+            outString += "*";
+        }
+        var passBox = document.getElementById("uPass");
+        passBox.setAttribute("value", outString);
     }
 </script>
 {% endblock %}
