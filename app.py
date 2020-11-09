@@ -148,6 +148,7 @@ def update_account():
     newZip = request.args.get("updatedZip")
 
     user = User.query.filter_by(id = me_id).first()
+    currState = user.state
 
     if (len(newEmail) != 0):
         user.email = newEmail
@@ -161,8 +162,10 @@ def update_account():
     if (len(newCity) != 0):
         user.city = newCity
     
-    #if (len(newState) != 0):
-    user.state = newState
+    if (newState == None):
+        user.state = currState
+    else:
+        user.state = newState
 
     if (len(newZip) != 0):
         user.zip = newZip
