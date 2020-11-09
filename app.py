@@ -134,6 +134,43 @@ def account():
 
     return render_template('account.html', user = user)
 
+@app.route('/update-account')
+def update_account():
+    me_id = session.get("USERID")
+    if me_id is None:
+        return redirect(url_for('login'))
+
+    newEmail = request.args.get("updatedEmail")
+    newPassword = request.args.get("updatedPassword")
+    newStreet = request.args.get("updatedStreet")
+    newCity = request.args.get("updatedCity")
+    newState = request.args.get("updatedState")
+    newZip = request.args.get("updatedZip")
+
+    user = User.query.filter_by(id = me_id).first()
+
+    if (len(newEmail) != 0):
+        user.email = newEmail
+
+    if (len(newPassword) != 0):
+        user.password = newPassword
+
+    if (len(newStreet) != 0):
+        user.street = newStreet
+
+    if (len(newCity) != 0):
+        user.city = newCity
+    
+    #if (len(newState) != 0):
+    user.state = newState
+
+    if (len(newZip) != 0):
+        user.zip = newZip
+
+    db_session.commit()
+
+    return redirect(url_for('account'))
+    #return render_template('testupdates.html', email = newEmail, password = newPassword, street = newStreet, city = newCity, state = newState, zipcode = newZip)
 
 @app.route('/wallet')
 def wallet():

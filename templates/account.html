@@ -25,7 +25,7 @@
 </ul>
 <!---------------------------------------------------------------------------------------------------------------->
 <div id = "editing">
-    <form>
+    <form id = "account-updates" action = "/update-account">
         <label for = "uEmail">Change Email</label>
         <input id = "uEmail" type = "text" placeholder = {{ user.email }} name = "updatedEmail">
 
@@ -39,7 +39,7 @@
             <input type = "text" placeholder = {{ user.city }} name = "updatedCity">
             <!-- <input type = "text" placeholder = {{ user.state }} name = "updatedState"> -->
             <select id = "stateSelect" name = "updatedState">
-                <option value = "" disabled selected>{{ user.state }}</option>
+                <option value = "{{ user.state }}" disabled selected>{{ user.state }}</option>
                 {% for state in ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "FL", "GA", 
                 "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MD", "ME", 
                 "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
@@ -53,7 +53,7 @@
     </form>
 </div>
 <br>
-<button id = "done_button" onclick = "location.href = '/account'">done</button>
+<button id = "done_button" type = "submit" form = "account-updates">done</button>
 <button id = "edit_button" onclick = "runScripts()">update your information</button>
 
 
