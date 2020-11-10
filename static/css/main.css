@@ -90,6 +90,16 @@ h1 {
     text-align: center;
 }
 
+table {
+  width: 60%;
+}
+
+td, th {
+  height: 5%;
+  padding: 2%;
+  text-align: center;
+}
+
 /* Bordered form */
 
 /* Full-width inputs */

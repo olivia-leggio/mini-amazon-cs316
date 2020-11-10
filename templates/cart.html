@@ -9,13 +9,13 @@
 
 {% block body %}
 <h3>Cart</h3>
-<table>
-    <thead>
-        <head>Picture</head>
-        <head>Item</head>
-        <head>Price</head>
-        <head>Quantity</head>
-    </thead>
+<table #cart>
+    <tr>
+        <th>Picture</th>
+        <th>Item</th>
+        <th>Price</th>
+        <th>Quantity</th>
+    </tr>
     <tbody>
     {% for item in items %}
         <tr>

@@ -240,7 +240,7 @@ def cart():
     if me_id is None:
         return redirect(url_for('login'))
 
-    sql_get_cart = '''SELECT I.imgurl AS img, I.name AS name, L.price AS price, C.amount AS amount
+    sql_get_cart = '''SELECT I.imgurl AS img, I.name AS name, L.price AS price, C.amount AS amount, C.id AS id
                       FROM carts C, listings L, items I
                       WHERE C.user_id = {} AND C.listing_id = L.id
                       AND L.item_id = I.id'''.format(me_id)
