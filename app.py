@@ -35,6 +35,12 @@ def login():
             return redirect(url_for('index'))
     return render_template('login.html', error=error)
 
+@app.route('/logout')
+def logout():
+    session.pop('NAME',None)
+    session.pop('TYPE',None)
+    session.pop('USERID',None)
+    return redirect(url_for('login'))
 
 @app.route('/browse')
 def browse():
@@ -138,7 +144,7 @@ def account():
     me_id = session.get('USERID')
     if me_id is None:
         return redirect(url_for('login'))
-    
+
     user = User.query.filter_by(id = me_id).first()
 
     return render_template('account.html', user = user, name = Name(), type = Type())
@@ -170,7 +176,7 @@ def update_account():
 
     if (len(newCity) != 0):
         user.city = newCity
-    
+
     if (newState == None):
         user.state = currState
     else:
@@ -385,7 +391,7 @@ def add_listing():
 
     if me.type != 'Seller':
         return redirect(url_for('denied'))
-        
+
     seller_id = me_id
     item_id = request.args.get("item_id")
     wh_id = request.args.get("warehouse_id")

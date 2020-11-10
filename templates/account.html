@@ -43,10 +43,10 @@
             <!-- <input type = "text" placeholder = {{ user.state }} name = "updatedState"> -->
             <select id = "stateSelect" name = "updatedState">
                 <option value = "{{ user.state }}" disabled selected>{{ user.state }}</option>
-                {% for state in ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "FL", "GA", 
-                "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MD", "ME", 
-                "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
-                "NC", "ND", "NM", "NY", "OH", "OK", "OR", "PA", "RI", "SC", 
+                {% for state in ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "FL", "GA",
+                "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MD", "ME",
+                "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+                "NC", "ND", "NM", "NY", "OH", "OK", "OR", "PA", "RI", "SC",
                 "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY"] %}
                 <option value = {{ state }}>{{ state }}</option>
                 {% endfor %}
