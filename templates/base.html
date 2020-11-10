@@ -13,18 +13,23 @@
     {% block head %}{% endblock %}
 </head>
 <body>
+    {% if logged_in %}
     <div id = "top-bar">
         <ul id = "nav">
             <li><a href = "/cart" id = "cart">cart</a></li>
             <li class = "dropdown">
-                <a href = "javascript:void(0)" class = "dropmenu">user</a>
+                <a href = "javascript:void(0)" class = "dropmenu">Hi, {{ name }}</a>
                 <div class = "dropmenu-content">
                     <a href = "/account">account</a>
-                    <a href = "/wallet">my balance</a>
+                    <a href = "/wallet">balance</a>
                     <a href = "/history">order history</a>
                     <a href = "/browse">Browse Items</a>
-                    <a href = "/warehouse">Warehouse Manager</a>
-                    <a href = "/seller">Seller</a>
+                    {% if accType == 'Manager' %}
+                        <a href = "/warehouse">Warehouse Manager</a>
+                    {% endif %}
+                    {% if accType == 'Seller' %}
+                        <a href = "/seller">Seller</a>
+                    {% endif %}
                     <a href = "/test">Testing</a>
                 </div>
             </li>
@@ -36,6 +41,25 @@
             <input id = "searchtext" type = "text" name = "searchtext">
         </form>
     </div>
+
+    {% else %}
+    <div id = "top-bar">
+        <ul id = "nav">
+            <li><a href = "/cart" id = "cart">cart</a></li>
+            <li class = "dropdown">
+                <a href = "/login" class = "dropmenu">sign in</a>
+            </li>
+            <li><a href = "/test">Testing</a></li>
+        </ul>
+        <a href = "/">
+            <img src = "{{ url_for('static', filename = 'img/logo1.png') }}" width = "68" height = "68" id = "logo">
+        </a>
+        <form id = "searchbar" action = "/search-results">
+            <input id = "searchtext" type = "text" name = "searchtext">
+        </form>
+    </div>
+
+    {% endif %}
     {% block body %}{% endblock %}
 </body>
 </html>

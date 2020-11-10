@@ -11,7 +11,16 @@ app.config['SECRET_KEY'] = secrets.token_urlsafe(15)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    me_id = session.get("USERID")
+    logged_in = not (me_id is None)
+
+    if (logged_in):
+        user = User.query.filter_by(id = me_id).first()
+        name = user.name
+        accType = user.type
+        return render_template('index.html', logged_in = logged_in, name = name, accType = accType)
+    else:
+        return render_template('index.html', logged_in = logged_in)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -49,12 +58,17 @@ def browse():
       incats = InCat.query.all()
       items = Item.query.all()
 
+  user = User.query.filter_by(id = me_id).first()
+  name = user.name
+  accType = user.type
+
   return render_template(
     'browse.html',
     cats = Category.query.all(),
     incats = incats,
     items = items,
-    me = User.query.filter_by(id=me_id).first()
+    me = User.query.filter_by(id=me_id).first(),
+    logged_in = True, name = name, accType = accType
   )
 
 @app.route('/add_item')
@@ -87,6 +101,8 @@ def warehouse():
         return redirect(url_for('login'))
 
     me = User.query.filter_by(id=me_id).first()
+    name = me.name
+    accType = me.type
 
     if me.type != 'Manager':
         return redirect(url_for('denied'))
@@ -99,7 +115,8 @@ def warehouse():
       past_orders = past_orders,
       new_orders = new_orders,
       me = me,
-      warehouse = Warehouse.query.filter_by(id=me.warehouse.warehouse_id).first()
+      warehouse = Warehouse.query.filter_by(id=me.warehouse.warehouse_id).first(),
+      logged_in = True, name = name, accType = accType
     )
 
 @app.route('/markdelivered')
@@ -132,7 +149,9 @@ def account():
     
     user = User.query.filter_by(id = me_id).first()
 
-    return render_template('account.html', user = user)
+    name = user.name
+    accType = user.type
+    return render_template('account.html', logged_in = True, name = name, user = user, accType = accType)
 
 @app.route('/update-account')
 def update_account():
@@ -187,7 +206,11 @@ def wallet():
 
     balance = engine.execute(sql_get_balance)
 
-    return render_template('wallet.html', balance = balance)
+    user = User.query.filter_by(id = me_id).first()
+    name = user.name
+    accType = user.type
+
+    return render_template('wallet.html', balance = balance, logged_in = True, name = name, accType = accType)
 
 @app.route('/update_balance')
 def update_balance():
@@ -217,7 +240,11 @@ def orderHistory():
 
     history_items = engine.execute(sql_get_history)
 
-    return render_template('order-history.html', items = history_items)
+    user = User.query.filter_by(id = me_id).first()
+    name = user.name
+    accType = user.type
+
+    return render_template('order-history.html', items = history_items, logged_in = True, name = name, accType = accType)
 
 @app.route('/cart')
 def cart():
@@ -232,16 +259,33 @@ def cart():
 
     cart_items = engine.execute(sql_get_cart)
 
-    return render_template('cart.html', items = cart_items)
+    user = User.query.filter_by(id = me_id).first()
+    name = user.name
+    accType = user.type
+
+    return render_template('cart.html', items = cart_items, logged_in = True, name = name, accType = accType)
 
 @app.route('/search-results')
 def results():
     query = request.args.get("searchtext")
 
-    return render_template(
+    me_id = session.get("USERID")
+    logged_in = not (me_id is None)
+
+    if(logged_in):
+        user = User.query.filter_by(id = me_id).first()
+        name = user.name
+        accType = user.type
+
+        return render_template(
         'results.html',
-        results = Item.query.filter(Item.name.like(query))
-    )
+        results = Item.query.filter(Item.name.like(query)), logged_in = True, name = name, accType = accType
+        )
+    else:
+        return render_template(
+            'results.html',
+            results = Item.query.filter(Item.name.like(query))
+        )
 
 @app.route('/item')
 def items():
