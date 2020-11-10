@@ -255,10 +255,15 @@ def cart():
 @app.route('/search-results')
 def results():
     query = request.args.get("searchtext")
+    sql_results = '''SELECT *
+                         FROM items I
+                         WHERE I.name LIKE '%{}%' '''.format(query)
+
+    results = engine.execute(sql_results)
 
     return render_template(
         'results.html',
-        results = Item.query.filter(Item.name.like(query)), name = Name(), type = Type()
+        results = results
         )
 
 @app.route('/item')
