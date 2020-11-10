@@ -263,7 +263,7 @@ def results():
 
     return render_template(
         'results.html',
-        results = results
+        results = results, name = Name(), type = Type()
         )
 
 @app.route('/item')
