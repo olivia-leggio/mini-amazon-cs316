@@ -131,9 +131,12 @@ def markdelivered():
 def return_order():
     order_id = request.args.get('order_id')
     order = Order.query.filter_by(id=order_id).first()
+    admin = User.query.filter_by(type="ADMIN").first()
     money = order.price * order.amount
+
     order.user.balance = order.user.balance + money
-    order.seller.balance = order.seller.balance - money
+    order.seller.balance = order.seller.balance - (0.9 * money)
+    admin.balance = admin.balance - (0.1 * money)
 
     db_session.delete(order)
     db_session.commit()
@@ -285,6 +288,9 @@ def  sellerpage():
 
 @app.route('/test')
 def test():
+    if Type() != "ADMIN":
+        return redirect(url_for('denied'))
+
     return render_template(
         'test.html',
         users = User.query.all(),
@@ -433,9 +439,14 @@ def process_checkout():
     order.item = cart.listing.item
     order.warehouse = cart.listing.warehouse
 
+    admin = User.query.filter_by(type="ADMIN").first()
+    money = cart.listing.price * cart.amount
+
     cart.listing.amount = cart.listing.amount - cart.amount
-    cart.listing.seller.balance = cart.listing.seller.balance + cart.listing.price*cart.amount
-    cart.user.balance = cart.user.balance - cart.listing.price*cart.amount
+
+    cart.user.balance = cart.user.balance - money
+    cart.listing.seller.balance = cart.listing.seller.balance + (0.9 * money)
+    admin.balance = admin.balance + (0.1 * money)
 
     db_session.add(order)
     db_session.delete(cart)

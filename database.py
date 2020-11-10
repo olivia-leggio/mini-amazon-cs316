@@ -16,6 +16,7 @@ def clear_data(session):
     session.commit()
 
 def init_db():
+    clear_data(db_session)
     Base.metadata.drop_all(bind=engine)
     import models
     Base.metadata.create_all(bind=engine)
