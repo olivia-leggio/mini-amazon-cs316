@@ -8,19 +8,16 @@ app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SECRET_KEY'] = secrets.token_urlsafe(15)
 
+def Name():
+    return session.get('NAME')
+
+def Type():
+    return session.get('TYPE')
+
 
 @app.route('/')
 def index():
-    me_id = session.get("USERID")
-    logged_in = not (me_id is None)
-
-    if (logged_in):
-        user = User.query.filter_by(id = me_id).first()
-        name = user.name
-        accType = user.type
-        return render_template('index.html', logged_in = logged_in, name = name, accType = accType)
-    else:
-        return render_template('index.html', logged_in = logged_in)
+    return render_template('index.html', name = Name(), type = Type())
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -33,6 +30,8 @@ def login():
             error = 'Invalid Credentials. Please try again.'
         else:
             session["USERID"] = user.id
+            session["NAME"] = user.name
+            session["TYPE"] = user.type
             return redirect(url_for('index'))
     return render_template('login.html', error=error)
 
@@ -58,18 +57,13 @@ def browse():
       incats = InCat.query.all()
       items = Item.query.all()
 
-  user = User.query.filter_by(id = me_id).first()
-  name = user.name
-  accType = user.type
-
   return render_template(
     'browse.html',
     cats = Category.query.all(),
     incats = incats,
     items = items,
     me = User.query.filter_by(id=me_id).first(),
-    logged_in = True, name = name, accType = accType
-  )
+    name = Name(), type = Type())
 
 @app.route('/add_item')
 def add_item():
@@ -101,8 +95,6 @@ def warehouse():
         return redirect(url_for('login'))
 
     me = User.query.filter_by(id=me_id).first()
-    name = me.name
-    accType = me.type
 
     if me.type != 'Manager':
         return redirect(url_for('denied'))
@@ -116,7 +108,7 @@ def warehouse():
       new_orders = new_orders,
       me = me,
       warehouse = Warehouse.query.filter_by(id=me.warehouse.warehouse_id).first(),
-      logged_in = True, name = name, accType = accType
+      name = Name(), type = Type()
     )
 
 @app.route('/markdelivered')
@@ -149,9 +141,7 @@ def account():
     
     user = User.query.filter_by(id = me_id).first()
 
-    name = user.name
-    accType = user.type
-    return render_template('account.html', logged_in = True, name = name, user = user, accType = accType)
+    return render_template('account.html', user = user, name = Name(), type = Type())
 
 @app.route('/update-account')
 def update_account():
@@ -206,11 +196,7 @@ def wallet():
 
     balance = engine.execute(sql_get_balance)
 
-    user = User.query.filter_by(id = me_id).first()
-    name = user.name
-    accType = user.type
-
-    return render_template('wallet.html', balance = balance, logged_in = True, name = name, accType = accType)
+    return render_template('wallet.html', balance = balance, name = Name(), type = Type())
 
 @app.route('/update_balance')
 def update_balance():
@@ -240,11 +226,7 @@ def orderHistory():
 
     history_items = engine.execute(sql_get_history)
 
-    user = User.query.filter_by(id = me_id).first()
-    name = user.name
-    accType = user.type
-
-    return render_template('order-history.html', items = history_items, logged_in = True, name = name, accType = accType)
+    return render_template('order-history.html', items = history_items, name = Name(), type = Type())
 
 @app.route('/cart')
 def cart():
@@ -259,38 +241,21 @@ def cart():
 
     cart_items = engine.execute(sql_get_cart)
 
-    user = User.query.filter_by(id = me_id).first()
-    name = user.name
-    accType = user.type
-
-    return render_template('cart.html', items = cart_items, logged_in = True, name = name, accType = accType)
+    return render_template('cart.html', items = cart_items, name = Name(), type = Type())
 
 @app.route('/search-results')
 def results():
     query = request.args.get("searchtext")
 
-    me_id = session.get("USERID")
-    logged_in = not (me_id is None)
-
-    if(logged_in):
-        user = User.query.filter_by(id = me_id).first()
-        name = user.name
-        accType = user.type
-
-        return render_template(
+    return render_template(
         'results.html',
-        results = Item.query.filter(Item.name.like(query)), logged_in = True, name = name, accType = accType
-        )
-    else:
-        return render_template(
-            'results.html',
-            results = Item.query.filter(Item.name.like(query))
+        results = Item.query.filter(Item.name.like(query)), name = Name(), type = Type()
         )
 
 @app.route('/item')
 def items():
 
-    return render_template('item.html')
+    return render_template('item.html', name = Name(), type = Type())
 
 @app.route('/seller')
 def  sellerpage():
@@ -308,7 +273,8 @@ def  sellerpage():
         listings = Listing.query.filter_by(seller_id=me_id).all(),
         warehouses = Warehouse.query.all(),
         cats = Category.query.all(),
-        items = Item.query.all()
+        items = Item.query.all(),
+        name = Name(), type = Type()
         )
 
 @app.route('/test')
@@ -324,7 +290,8 @@ def test():
         reviews = Review.query.all(),
         listings = Listing.query.all(),
         carts = Cart.query.all(),
-        orders = Order.query.all()
+        orders = Order.query.all(),
+        name = Name(), type = Type()
     )
 
 @app.route('/delete_item')

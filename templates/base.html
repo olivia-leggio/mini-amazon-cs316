@@ -13,7 +13,7 @@
     {% block head %}{% endblock %}
 </head>
 <body>
-    {% if logged_in %}
+    {% if type in ['User', 'Seller', 'Manager'] %}
     <div id = "top-bar">
         <ul id = "nav">
             <li><a href = "/cart" id = "cart">cart</a></li>
@@ -24,10 +24,10 @@
                     <a href = "/wallet">balance</a>
                     <a href = "/history">order history</a>
                     <a href = "/browse">Browse Items</a>
-                    {% if accType == 'Manager' %}
+                    {% if type == 'Manager' %}
                         <a href = "/warehouse">Warehouse Manager</a>
                     {% endif %}
-                    {% if accType == 'Seller' %}
+                    {% if type == 'Seller' %}
                         <a href = "/seller">Seller</a>
                     {% endif %}
                     <a href = "/test">Testing</a>
