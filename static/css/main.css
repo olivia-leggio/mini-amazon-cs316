@@ -167,3 +167,19 @@ span.psw {
     width: 100%;
   }
 }
+
+/* Style for item page */
+.item-left-column {
+  width: 65%;
+}
+
+.product-description {
+  border-bottom: 1px solid #000000;
+  margin-bottom: 30px;
+}
+
+.product-description p {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 24px;
+}

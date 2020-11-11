@@ -268,8 +268,18 @@ def results():
 
 @app.route('/item')
 def items():
+    enter = 1
+    sql_search = '''SELECT *
+                    FROM items I
+                    WHERE I.id={}'''.format(enter)
 
-    return render_template('item.html', name = Name(), type = Type())
+    item = engine.execute(sql_search)     
+    items = Item.query.filter_by(id=1).first()
+
+    return render_template('item.html', 
+        items = items,
+        cats = items.categories
+        )
 
 @app.route('/seller')
 def  sellerpage():
