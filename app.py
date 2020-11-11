@@ -278,7 +278,8 @@ def items():
 
     return render_template('item.html', 
         items = items,
-        cats = items.categories
+        cats = items.categories,
+        name = Name(), type = Type()
         )
 
 @app.route('/seller')
