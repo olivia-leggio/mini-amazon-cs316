@@ -269,11 +269,9 @@ def results():
 @app.route('/item/')
 def items():
     ids = request.args.get("item_id")
-       
-    items = Item.query.filter_by(id=ids).first()
-
+  
     return render_template('item.html', 
-        items = items,
+        items = Item.query.filter_by(id=ids).first(),
         cats = InCat.query.filter_by(item_id=ids).first(),
         name = Name(), 
         type = Type()
