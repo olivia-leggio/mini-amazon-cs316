@@ -17,7 +17,7 @@ def Type():
 
 @app.route('/')
 def index():
-    return render_template('index.html', name = Name(), type = Type())
+    return render_template('index.html', categories = Category.query.all(), name = Name(), type = Type())
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -255,15 +255,27 @@ def cart():
 @app.route('/search-results')
 def results():
     query = request.args.get("searchtext")
-    sql_results = '''SELECT *
+    category = request.args.get('search-cats','ALL')
+
+    sql_items_cat = '''SELECT *
+                    FROM items I
+                    WHERE I.name LIKE '%{}%' and EXISTS (SELECT * FROM categories C, inCategory A
+                                  WHERE I.id=A.item_id and C.id=A.cat_id
+                                  and C.name = :1)'''.format(query)
+
+    results = engine.execute(sql_items_cat,category)
+    
+    sql_items_all = '''SELECT *
                          FROM items I
                          WHERE I.name LIKE '%{}%' '''.format(query)
+    results1 = engine.execute(sql_items_all)
 
-    results = engine.execute(sql_results)
+    if category == 'ALL':
+      results = results1
 
     return render_template(
         'results.html',
-        results = results, name = Name(), type = Type()
+        results = results, categories = Category.query.all(), name = Name(), type = Type()
         )
 
 @app.route('/item/')
