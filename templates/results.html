@@ -18,7 +18,11 @@
     {% for result in results %}
         <tr>
             <!--<td> {{ result.name }}</td>-->
-            <td> <a href = "/item">{{ result.name }}</a> </td>
+            <td> 
+                <form action="/item">
+                <button type="submit" name="item_id" value= {{result.id}}>{{ result.name }}</button>
+                </form>
+            </td>
             <td> {{ result.brand }}</td>
             <td> {{ result.desc }}</td>
         </tr>
