@@ -169,17 +169,20 @@ span.psw {
 }
 
 /* Style for item page */
-.item-left-column {
+.product-info {
   width: 65%;
 }
 
-.product-description {
+.product-head {
   border-bottom: 1px solid #000000;
   margin-bottom: 30px;
 }
 
-.product-description p {
-  font-size: 16px;
-  font-weight: 300;
-  line-height: 24px;
+
+table.item-table, td.item-table, th.item-table {
+  width: 30%;
+  height: 2%;
+  padding: 1%;
+  text-align: left;
 }
+

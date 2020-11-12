@@ -266,20 +266,17 @@ def results():
         results = results, name = Name(), type = Type()
         )
 
-@app.route('/item')
+@app.route('/item/')
 def items():
-    enter = 1
-    sql_search = '''SELECT *
-                    FROM items I
-                    WHERE I.id={}'''.format(enter)
-
-    item = engine.execute(sql_search)     
-    items = Item.query.filter_by(id=1).first()
+    ids = request.args.get("item_id")
+       
+    items = Item.query.filter_by(id=ids).first()
 
     return render_template('item.html', 
         items = items,
-        cats = items.categories,
-        name = Name(), type = Type()
+        cats = InCat.query.filter_by(item_id=ids).first(),
+        name = Name(), 
+        type = Type()
         )
 
 @app.route('/seller')

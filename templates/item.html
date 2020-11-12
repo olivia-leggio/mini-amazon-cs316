@@ -8,31 +8,46 @@
 <h1> {{ items.name }} </h1>
 
 <!--<img src= "{{ items.imgurl }}" alt=" {{ items.name }}">-->
-<div class="item-left-column">
-     <!--Product Description 
-      
-        {% for cats in categories %}
-        {% endfor %}-->
-    <h4> in {{ cats }} </h4>
-    <div class="product-description">
-      <h4>Description</h4>
-      <p> {{ items.desc }}</p>
+
+<div class = "product-info">   
+    <div class ="product-head">
+        <h4> in {{ cats.cat.name }} </h4>
+        <p> Average rating: <p>
+        <p> Average price </p>
     </div>
+    
+    <div class = "product-description">
+        <table class = "item-table">
+            <tbody>
+                <tr>
+                    <td> Brand </td>
+                    <td> {{ items.brand }}</td>
+                </tr>
+                <tr>
+                    <td> Color </td>
+                    <td> {{ items.desc }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <h4> About this item </h4>
+        <p> {{ items.desc }}</p>
+    </div>
+</div>
+
+<div class = "product-sellers">
+    <h2> Sellers </h2>
 
 </div>
 
-<table>
-    <thead>
-        <th>Name</th>
-        <th>Brand</th>
-        <th>Description</th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>  </td>
-            <td> {{ items.brand }}</td>
-            <td> {{ items.desc }}</td>
-        </tr>
-    </tbody>
-</table>
+<h2> Reviews </h2>
+<div class="add-review">
+
+</div>
+
+<div class = "product-reviews">
+
+</div>
+
+
+
 {% endblock %}
