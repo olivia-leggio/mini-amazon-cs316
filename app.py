@@ -249,8 +249,12 @@ def cart():
                       AND L.item_id = I.id'''.format(me_id)
 
     cart_items = engine.execute(sql_get_cart)
+    count_items = engine.execute(sql_get_cart)
+    rows = [r[0] for r in count_items]
+    num = len(rows)
+    cart_copy = engine.execute(sql_get_cart)
 
-    return render_template('cart.html', items = cart_items, name = Name(), type = Type())
+    return render_template('cart.html', items = cart_items, items2 = cart_copy, num = num, name = Name(), type = Type())
 
 @app.route('/checkout', methods = ["GET", "POST"])
 def checkout():
@@ -279,7 +283,21 @@ def checkout():
         db_session.delete(cart)
         db_session.commit()
     
-    return redirect(url_for('cart'))
+    return render_template("finished-order.html", name = Name(), type = Type())
+
+@app.route('/delete-cart', methods = ["GET", "POST"])
+def delete_cart():
+    if request.method == "POST":
+        delete_list = request.form.getlist("deleteId")
+
+    for id in delete_list:
+        cart_id = id
+        cart = Cart.query.filter_by(id = cart_id).first()
+        
+        db_session.delete(cart)
+        db_session.commit()
+
+    return redirect(url_for("cart"))
 
 @app.route('/search-results')
 def results():

@@ -5,30 +5,84 @@
 
 <meta name = "author" content = "Olivia Leggio">
 
+
+<style>
+    #checkouts {
+        display: block;
+    }
+    #deletes {
+        display: none;
+    }
+</style>
+
 {% endblock %}
 
 {% block body %}
-<h3>Cart</h3>
-<form id = "cart-checkout" action = "/checkout" method = "POST">
-    <table #cart>
-        <tr>
-            <th>Picture</th>
-            <th>Item</th>
-            <th>Price</th>
-            <th>Quantity</th>
-        </tr>
-        <tbody>
-        {% for item in items %}
+<div id = "checkouts">
+    {% if num > 0 %}
+    <h3>Cart</h3>
+    <form id = "cart-checkout" action = "/checkout" method = "POST">
+        <table #cart>
             <tr>
-                <td><input type = "checkbox" name = "cartItem" value = "{{ item.id }}"></td>
-                <td>{{ item.img }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.price }}</td>
-                <td>{{ item.amount }}</td>
+                <th>       </th>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Quantity</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</form>
-<button id = "checkout_button" type = "submit" form = "cart-checkout">checkout</button>
+            <tbody>
+            {% for item in items %}
+                <tr>
+                    <td><input type = "checkbox" name = "cartItem" value = "{{ item.id }}"></td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.amount }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+    <button id = "checkout_button" type = "submit" form = "cart-checkout">checkout</button>
+    <button id = "toggle_delete" onclick = "toggleDelete()">remove items</button>
+    {% else %}
+    <h3>Your cart is empty!</h3>
+    {% endif %}
+</div>
+<!---------------------------------------------------------------------------------------------------------------->
+<div id = "deletes">
+<h3>Delete items from cart</h3>
+    <form id = "cart-delete" action = "/delete-cart" method = "POST">
+        <table #cart>
+            <tr>
+                <th>       </th>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </tr>
+            <tbody>
+            {% for item2 in items2 %}
+                <tr>
+                    <td><input type = "checkbox" name = "deleteId" value = "{{ item2.id }}"></td>
+                    <td>{{ item2.name }}</td>
+                    <td>{{ item2.price }}</td>
+                    <td>{{ item2.amount }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+    <button id = "cancel_button" onClick = "cancelDelete()">cancel</button>
+    <button id = "delete_button" type = "submit" form = "cart-delete">delete items</button>
+</div>
+
+<script>
+    function cancelDelete() {
+        document.getElementById("deletes").style.display = "none";
+        document.getElementById("checkouts").style.display = "block";
+    }
+    
+    function toggleDelete() {
+        document.getElementById("deletes").style.display = "block";
+        document.getElementById("checkouts").style.display = "none";
+    }
+</script>
 {% endblock %}

@@ -86,7 +86,7 @@ li a:hover, .dropdown:hover {
     top: 0px;
 }
 
-h1 {
+h1, h2 {
     text-align: center;
 }
 
@@ -100,6 +100,17 @@ td, th {
   text-align: center;
 }
 
+#delete_button {
+  background-color: #c00000;
+}
+#cancel_button {
+  background-color: #888888;
+  color: #333333;
+}
+#toggle_delete {
+  background-color: #888888;
+  color: #333333;
+}
 /* Bordered form */
 
 /* Full-width inputs */
