@@ -9,22 +9,26 @@
 
 {% block body %}
 <h3>Cart</h3>
-<table #cart>
-    <tr>
-        <th>Picture</th>
-        <th>Item</th>
-        <th>Price</th>
-        <th>Quantity</th>
-    </tr>
-    <tbody>
-    {% for item in items %}
+<form id = "cart-checkout" action = "/checkout" method = "POST">
+    <table #cart>
         <tr>
-            <td>{{ item.img }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.price }}</td>
-            <td>{{ item.amount }}</td>
+            <th>Picture</th>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Quantity</th>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        <tbody>
+        {% for item in items %}
+            <tr>
+                <td><input type = "checkbox" name = "cartItem" value = "{{ item.id }}"></td>
+                <td>{{ item.img }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.amount }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</form>
+<button id = "checkout_button" type = "submit" form = "cart-checkout">checkout</button>
 {% endblock %}

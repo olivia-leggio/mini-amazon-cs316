@@ -252,6 +252,35 @@ def cart():
 
     return render_template('cart.html', items = cart_items, name = Name(), type = Type())
 
+@app.route('/checkout', methods = ["GET", "POST"])
+def checkout():
+    if request.method == 'POST':
+        checkout_list = request.form.getlist("cartItem")
+    
+    for id in checkout_list:
+        cart_id = id
+        cart = Cart.query.filter_by(id=cart_id).first()
+        order = Order(datetime.now(),False,cart.listing.price,cart.amount)
+        order.user = cart.user
+        order.seller = cart.listing.seller
+        order.item = cart.listing.item
+        order.warehouse = cart.listing.warehouse
+
+        admin = User.query.filter_by(type="ADMIN").first()
+        money = cart.listing.price * cart.amount
+
+        cart.listing.amount = cart.listing.amount - cart.amount
+
+        cart.user.balance = cart.user.balance - money
+        cart.listing.seller.balance = cart.listing.seller.balance + (0.9 * money)
+        admin.balance = admin.balance + (0.1 * money)
+
+        db_session.add(order)
+        db_session.delete(cart)
+        db_session.commit()
+    
+    return redirect(url_for('cart'))
+
 @app.route('/search-results')
 def results():
     query = request.args.get("searchtext")
