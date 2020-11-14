@@ -181,17 +181,14 @@ span.psw {
 
 /* Style for item page */
 .product-info {
-  width: 65%;
-}
-
-.product-head {
+  width: 55%;
   border-bottom: 1px solid #000000;
   margin-bottom: 30px;
+  padding-left: 37px;
 }
 
-
 table.item-table {
-  width: 10%;
+  width: 15%;
   text-align: left;
 }
 

@@ -17,7 +17,7 @@ def Type():
 
 @app.route('/')
 def index():
-    return render_template('index.html', categories = Category.query.all(), name = Name(), type = Type())
+    return render_template('index.html', items = Item.query.all(), categories = Category.query.all(), name = Name(), type = Type())
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
