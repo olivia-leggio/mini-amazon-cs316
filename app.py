@@ -42,6 +42,27 @@ def logout():
     session.pop('USERID',None)
     return redirect(url_for('login'))
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == "POST":
+        req = request.form
+        print(req)
+
+        email = req['email']
+        name = req['name']
+        password = req['password']
+        street = req['street']
+        city = req['city']
+        state = req['state']
+        zipcode = int(req['zip'])
+        balance = float(0)
+        type_ = 'User'
+        return redirect(request.url)
+        # TODO: Redirect to the home page
+    return render_template('signup.html')
+
+
+
 @app.route('/browse')
 def browse():
   me_id = session.get("USERID")
