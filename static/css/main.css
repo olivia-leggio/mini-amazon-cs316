@@ -182,9 +182,17 @@ span.psw {
 /* Style for item page */
 .product-info {
   width: 55%;
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid #5e5e5e;
   margin-bottom: 30px;
-  padding-left: 37px;
+  padding-left: 15px;
+  margin-left: 40px;
+}
+
+.product-info2 {
+  width: 55%;
+  margin-bottom: 30px;
+  padding-left: 15px;
+  margin-left: 40px;
 }
 
 table.item-table {
