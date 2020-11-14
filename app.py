@@ -19,6 +19,11 @@ def Type():
 def index():
     return render_template('index.html', categories = Category.query.all(), name = Name(), type = Type())
 
+@app.route('/databaseview')
+def databaseview():
+    return render_template('databaseview.html', values=User.query.all())
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -63,6 +68,26 @@ def signup():
         balance = float(0)
         type_ = 'User'
 
+        confirm_email = req['confirm_email']
+        confirm_password = req['confirm_password']
+        
+        if email != confirm_email:
+            error = 'Emails do not match'
+            return render_template('signup.html', error=error)
+
+        exists = User.query.filter_by(email=email).first()
+        if exists:
+            error = 'An account with this email already exists. Login with your existing email or use a different one.'
+            return render_template('signup.html', error=error)
+            
+        if password != confirm_password:
+            error = 'Passwords do not match'
+            return render_template('signup.html', error=error)
+
+        if len(str(zipcode)) != 5:
+            error = 'Please enter a valid zipcode'
+            return render_template('signup.html', error=error)
+
         new_user = User(email, password, name, balance, type_, street, city, zipcode, state)
         db_session.add(new_user)
         db_session.commit()
@@ -72,14 +97,16 @@ def signup():
         session["TYPE"] = new_user.type
 
         return redirect(url_for('index'))
-        # TODO: Redirect to the home page
+
     # If you get here from a get request, render the page unless already logged in
     if session.get('USERID') is None: 
         return render_template('signup.html')
     else:
         return redirect(url_for('index'))
 
-
+@app.route('/forgotpassword')
+def forgotpassword():
+    return render_template('forgotpassword.html')
 
 @app.route('/browse')
 def browse():
