@@ -20,7 +20,7 @@ def Cats():
 
 @app.route('/')
 def index():
-    return render_template('index.html', items = Item.query.all(), categories = Cats(), name = Name(), type = Type())
+    return render_template('index.html', items = Item.query.limit(5).all(), categories = Cats(), name = Name(), type = Type())
 
 @app.route('/databaseview')
 def databaseview():
@@ -397,10 +397,27 @@ def results():
 @app.route('/item/')
 def items():
     ids = request.args.get("item_id")
+
+    listings = Listing.query.filter_by(item_id=ids).all()
+    reviews = Review.query.filter_by(item_id=ids).all()
+    cost = 0; rating = 0; num = 0
+    for l in listings:
+        cost = cost + l.price
+        num = num + 1
+    if num != 0:
+        cost = round(cost/num)    
+    num = 0
+    for r in reviews:
+        rating = rating + r.item_rating
+        num = num + 1
+    if num != 0:
+        rating = round(rating/num)
   
     return render_template('item.html', 
         items = Item.query.filter_by(id=ids).first(),
         cats = InCat.query.filter_by(item_id=ids).first(),
+        sellers = listings, reviews = reviews,
+        avg_p = cost, avg_r = rating,
         name = Name(), type = Type(), categories = Cats()
         )
 

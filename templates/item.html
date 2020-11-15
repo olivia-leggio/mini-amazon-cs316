@@ -11,8 +11,8 @@
 
 <div class = "product-info">   
     <h4> in {{ cats.cat.name }} </h4>
-    <p> Average rating: <p>
-    <p> Average price </p>
+    <p> Average rating: {{ avg_r }} out of 5 stars<p>
+    <p> Average price: ${{ avg_p }}</p>
 </div>
 
 <div class = "product-info2">
@@ -24,18 +24,61 @@
     <p> {{ items.desc }}</p>
 </div>
 
+<h2> Sellers </h2>
 <div class = "product-sellers">
-    <h2> Sellers </h2>
-
+    <table class = "sellers-table">
+        <tbody>
+            <tr>
+               {% for l in sellers %} 
+                <td> 
+                    <table class = "inner-table">
+                        <tr> 
+                            <td><b>Seller: </b></td>
+                            <td>{{ l.seller.name }} </td>
+                        </tr>
+                        <tr> 
+                            <td><b>Price: </b></td>
+                            <td> ${{ l.price }} </td>
+                        </tr>
+                        <tr> 
+                            <td><b>Amount Available: </b></td>
+                            <td>{{ l.amount }} </td>
+                        </tr>
+                    </table>
+                </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 <h2> Reviews </h2>
 <div class="add-review">
-
+    
 </div>
 
 <div class = "product-reviews">
-
+    <table>
+        <tbody>
+            {% for r in reviews %} 
+            <tr>
+                <td>
+                    <table class = "inner-table-review">
+                        <tr> 
+                            <td> <h3> {{ r.item_rating }} out of 5 Stars</h3> </td>
+                        </tr>
+                        <tr> 
+                            <td> <p> Reviewed by {{ r.user.name }} on {{ r.date.strftime("%b %d, %Y") }} </p> </td>
+                        </tr>
+                        <tr> 
+                            <td> <p> {{ r.text }} </p> </td>
+                        </tr>
+                    </table>   
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 

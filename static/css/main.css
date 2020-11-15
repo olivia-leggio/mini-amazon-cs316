@@ -181,22 +181,45 @@ span.psw {
 
 /* Style for item page */
 .product-info {
-  width: 55%;
+  width: 30%;
   border-bottom: 1px solid #5e5e5e;
   margin-bottom: 30px;
   padding-left: 15px;
-  margin-left: 40px;
+  margin-left: 60px;
 }
 
 .product-info2 {
-  width: 55%;
+  width: 40%;
   margin-bottom: 30px;
   padding-left: 15px;
-  margin-left: 40px;
+  margin-left: 60px;
 }
 
-table.item-table {
-  width: 15%;
-  text-align: left;
+.product-sellers {
+  margin-bottom: 50px;
+  border-bottom: 1px solid #5e5e5e;
+  margin-left: 60px;
+  margin-right: 60px;
+  overflow-x: auto;
+}
+
+.product-reviews {
+  width: 60%;
+  margin-left: 60px;
+  margin-right: 60px;
+}
+
+.sellers-table, td {
+  min-width: 125px;
+  max-width: 400px;
+}
+
+.inner-table {
+  border-left: 1px solid #000000;
+  border-right: 1px solid #000000;
+}
+
+.inner-table-review {
+  border-bottom: 1px solid #000000;
 }
 
