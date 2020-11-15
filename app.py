@@ -25,6 +25,9 @@ def Name():
 def Type():
     return session.get('TYPE')
 
+def ID():
+    return session.get('USERID')
+
 def Cats():
     return Category.query.all()
 
@@ -564,7 +567,7 @@ def new_house():
 
 @app.route('/add_review')
 def add_review():
-    user_id = request.args.get("user_id")
+    user_id = ID()
     item_id = request.args.get("item_id")
     seller_id = request.args.get("seller_id")
     text = request.args.get("text")

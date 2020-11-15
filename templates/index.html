@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block body %}
-<h1>Home Page</h1>
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}
@@ -20,20 +19,20 @@
 <div>
   <table>
     <thead>
+      <th>  </th>
       <th>Name</th>
-      <th>Brand</th>
-      <th>Color</th>
+      <th>Price</th>
     </thead>
     <tbody>
     {% for item in items %}
       <tr>
+        <td> {{ item.imgurl }}</td>
         <td> 
             <form action="/item">
                 <button type="submit" name="item_id" value= {{item.id}}>{{ item.name }}</button>
             </form>
         </td>
         <td> {{ item.brand }}</td>
-        <td> {{ item.color }}</td>
       </tr>
     {% endfor %}
     </tbody>
