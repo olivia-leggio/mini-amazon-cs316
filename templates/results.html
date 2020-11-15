@@ -18,7 +18,7 @@
         <tbody>
         {% for result in results %}
             <tr>
-                <td> <img src= {{items.imgurl}} alt=" {{ items.name }}"> </td>
+                <td> <img src= {{result.imgurl}} alt=" {{ result.name }}"> </td>
                 <td> 
                     <form action="/item">
                     <button type="submit" name="item_id" value= {{result.id}}>{{ result.name }}</button>
