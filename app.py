@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, render_template, session
+from flask import Flask, request, redirect, url_for, render_template, session, flash
 from models import *
 from database import db_session, engine
 from datetime import datetime
@@ -30,23 +30,14 @@ def Type():
 def index():
     return render_template('index.html', categories = Category.query.all(), name = Name(), type = Type())
 
-@app.route('/sendmail')
-def sendmail():
-    try:
-        msg = Message('Send Mail Tutorial!', sender='miniamazongroup20@gmail.com', recipients=['amrbedawi26@gmail.com'])
-        msg.body= "Here is your new password"
-        mail.send(msg)
-        return 'Mail sent'
-    except Exception as e:
-        return str(e)
-
 @app.route('/databaseview')
 def databaseview():
-    user = session.get('USERID')
-    question = Questions(user, 'Hell', 'O')
-    db_session.add(question)
-    db_session.commit()
+    # Use the following code to delet anything you want. All you have to do is visit the /databaseview url and it will
+    # delete the entry 
 
+    # user = User.query.filter_by(email='amrbedawi26@gmail.com').first()
+    # db_session.delete(user)
+    # db_session.commit()
     return render_template('databaseview.html', values=User.query.all())
 
 @app.route('/forgotpassword', methods=['POST', 'GET'])
@@ -63,8 +54,8 @@ def forgotpassword():
         msg.body = 'Hello '+user.name+',\nYou or someone else has requested the password for your account. \nYour password is '+user.password+'. \nIf you made this request, then login with the provided password. If you did not make this request, then you can ignore this email.'
         msg.html = render_template('retrieve_password_email.html', name=user.name, password=user.password)
         mail.send(msg)
-        error='We have sent you your password!'
-        return render_template('forgotpassword.html', error=error)
+        flash('We found your password! It may take a few minutes for the email to arrive. If you don\'t see it, check your spam folder')
+        return render_template('forgotpassword.html')
     else:
         return render_template('forgotpassword.html')
 
@@ -77,8 +68,8 @@ def login():
         input_pw = request.form['password']
         user = User.query.filter_by(email = input_email).first()
         if user is None or user.password != input_pw:
-            error = 'Invalid Credentials. Please try again.'
-            return render_template('login.html', error=error)
+            flash('Invalid Credentials. Please try again.')
+            return render_template('login.html')
         else:
             session["USERID"] = user.id
             session["NAME"] = user.name
@@ -93,9 +84,11 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('NAME',None)
-    session.pop('TYPE',None)
-    session.pop('USERID',None)
+    if session.get('USERID') is not None: 
+        session.pop('NAME',None)
+        session.pop('TYPE',None)
+        session.pop('USERID',None)
+        flash("You have been logged out", 'success')
     return redirect(url_for('login'))
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -115,23 +108,31 @@ def signup():
 
         confirm_email = req['confirm_email']
         confirm_password = req['confirm_password']
-        
+
+        valid = True
+        if '@' not in email:
+            flash('Please enter a valid email')
+            valid = False
+
         if email != confirm_email:
-            error = 'Emails do not match'
-            return render_template('signup.html', error=error)
+            flash('Emails do not match')
+            valid = False
 
         exists = User.query.filter_by(email=email).first()
         if exists:
-            error = 'An account with this email already exists. Login with your existing email or use a different one.'
-            return render_template('signup.html', error=error)
+            flash('An account with this email already exists. Login with your existing email or use a different one.')
+            valid = False
             
         if password != confirm_password:
-            error = 'Passwords do not match'
-            return render_template('signup.html', error=error)
+            flash('Password do not match.')
+            valid = False
 
         if len(str(zipcode)) != 5:
-            error = 'Please enter a valid zipcode'
-            return render_template('signup.html', error=error)
+            flash('Please enter a valid zipcode.')
+            valid = False
+            
+        if not valid:
+            return render_template('signup.html')
 
         new_user = User(email, password, name, balance, type_, street, city, zipcode, state)
         db_session.add(new_user)
@@ -141,6 +142,7 @@ def signup():
         session["NAME"] = new_user.name
         session["TYPE"] = new_user.type
 
+        flash("New account successfully made", 'info')
         return redirect(url_for('index'))
 
     # If you get here from a get request, render the page unless already logged in
