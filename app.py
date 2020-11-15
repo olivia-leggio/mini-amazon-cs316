@@ -8,7 +8,7 @@ from flask_mail import Mail, Message
 app = Flask(__name__)
 app.config.update(
     DEBUG=True,
-    MAIL_SERVER='smtp.gmail.com', 
+    MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=465,
     MAIL_USE_SSL=True,
     MAIL_USERNAME='miniamazongroup20@gmail.com',
@@ -36,7 +36,7 @@ def index():
 @app.route('/databaseview')
 def databaseview():
     # Use the following code to delet anything you want. All you have to do is visit the /databaseview url and it will
-    # delete the entry 
+    # delete the entry
 
     # user = User.query.filter_by(email='amrbedawi26@gmail.com').first()
     # db_session.delete(user)
@@ -80,14 +80,14 @@ def login():
             return redirect(url_for('index'))
 
     # If you get here from a get request, render the page unless already logged in
-    if session.get('USERID') is None: 
+    if session.get('USERID') is None:
         return render_template('login.html', categories = Cats())
     else:
         return redirect(url_for('index'))
 
 @app.route('/logout')
 def logout():
-    if session.get('USERID') is not None: 
+    if session.get('USERID') is not None:
         session.pop('NAME',None)
         session.pop('TYPE',None)
         session.pop('USERID',None)
@@ -125,7 +125,7 @@ def signup():
         if exists:
             flash('An account with this email already exists. Login with your existing email or use a different one.')
             valid = False
-            
+
         if password != confirm_password:
             flash('Password do not match.')
             valid = False
@@ -133,7 +133,7 @@ def signup():
         if len(str(zipcode)) != 5:
             flash('Please enter a valid zipcode.')
             valid = False
-            
+
         if not valid:
             return render_template('signup.html')
 
@@ -149,7 +149,7 @@ def signup():
         return redirect(url_for('index'))
 
     # If you get here from a get request, render the page unless already logged in
-    if session.get('USERID') is None: 
+    if session.get('USERID') is None:
         return render_template('signup.html', categories = Cats())
     else:
         return redirect(url_for('index'))
@@ -160,16 +160,16 @@ def browse():
     print(me_id)
     if me_id is None:
         return redirect(url_for('login'))
-    
+
     cat = request.args.get('cat','ALL')
     incats = InCat.query.join(Category).filter_by(name=cat)
-    
+
     sql_item_in_cat = '''SELECT *
                         FROM items I
                         WHERE EXISTS (SELECT * FROM categories C, inCategory A
                                     WHERE I.id=A.item_id and C.id=A.cat_id
                                     and C.name = :1)'''
-  
+
     items = engine.execute(sql_item_in_cat,cat)
     if cat == 'ALL':
         incats = InCat.query.all()
@@ -182,7 +182,7 @@ def browse():
     items = items,
     me = User.query.filter_by(id=me_id).first(),
     name = Name(), type = Type(), categories = Cats())
-    
+
 @app.route('/add_item')
 def add_item():
   name = request.args.get("name")
@@ -372,7 +372,7 @@ def cart():
 def checkout():
     if request.method == 'POST':
         checkout_list = request.form.getlist("cartItem")
-    
+
     for id in checkout_list:
         cart_id = id
         cart = Cart.query.filter_by(id=cart_id).first()
@@ -394,7 +394,7 @@ def checkout():
         db_session.add(order)
         db_session.delete(cart)
         db_session.commit()
-    
+
     return render_template("finished-order.html", name = Name(), type = Type(), categories = Cats())
 
 @app.route('/delete-cart', methods = ["GET", "POST"])
@@ -405,7 +405,7 @@ def delete_cart():
     for id in delete_list:
         cart_id = id
         cart = Cart.query.filter_by(id = cart_id).first()
-        
+
         db_session.delete(cart)
         db_session.commit()
 
@@ -423,7 +423,7 @@ def results():
                                   and C.name = :1)'''.format(query)
 
     results = engine.execute(sql_items_cat,category)
-    
+
     sql_items_all = '''SELECT *
                          FROM items I
                          WHERE I.name LIKE '%{}%' '''.format(query)
@@ -440,8 +440,8 @@ def results():
 @app.route('/item/')
 def items():
     ids = request.args.get("item_id")
-  
-    return render_template('item.html', 
+
+    return render_template('item.html',
         items = Item.query.filter_by(id=ids).first(),
         cats = InCat.query.filter_by(item_id=ids).first(),
         name = Name(), type = Type(), categories = Cats()
@@ -474,7 +474,7 @@ def test():
 
     return render_template(
         'test.html',
-        users = User.query.all(),
+        users = User.query.limit(25).all(),
         sellers = User.query.filter_by(type="Seller"),
         warehouses = Warehouse.query.all(),
         cats = Category.query.all(),
