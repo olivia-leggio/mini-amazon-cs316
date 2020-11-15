@@ -491,7 +491,7 @@ def test():
 
     return render_template(
         'test.html',
-        users = User.query.all(),
+        users = User.query.limit(25).all(),
         sellers = User.query.filter_by(type="Seller"),
         warehouses = Warehouse.query.all(),
         cats = Category.query.all(),
