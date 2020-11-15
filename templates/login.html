@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="static/main.css" rel="stylesheet" media="screen">
   </head>
-
   <body>
     <div class="container">
       <h1>Please login</h1>
@@ -15,15 +14,22 @@
       <form action="" method="post">
         <input type="text" placeholder="Email" name="username" value="{{
           request.form.username }}">
-         <input type="password" placeholder="Password" name="password" value="{{
+        <input type="password" placeholder="Password" name="password" value="{{
           request.form.password }}">
-        <input class="btn btn-default" type="submit" value="Login">
+        <input class="btn btn-default" type="submit" value="Login" style="background-color:limegreen;">
+        <a href = "/signup"> <input class="btn btn-default" type='button' value="Sign Up"></a>
+        <a href = "/forgotpassword"> <input class="btn btn-default" type='button' value="Forgot Password"></a>
       </form>
       {% if error %}
         <p class="error"><strong>Error:</strong> {{ error }}
       {% endif %}
-      <a href = "/signup"><button style="color: black; width:min-content; background-color: darkgray"> Sign Up </button></a>
-      <a href = "/forgotpassword"><button style="color:black; width:min-content; background-color: darkgray;"> Forgot Password </button></a>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <p style="color:red">{{msg}}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     </div>
   </body>
 </html>
