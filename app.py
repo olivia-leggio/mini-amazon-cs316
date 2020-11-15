@@ -3,10 +3,21 @@ from models import *
 from database import db_session, engine
 from datetime import datetime
 import secrets
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
+app.config.update(
+    DEBUG=True,
+    MAIL_SERVER='smtp.gmail.com', 
+    MAIL_PORT=465,
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME='miniamazongroup20@gmail.com',
+    MAIL_PASSWORD='ilovecs12!'
+)
+
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SECRET_KEY'] = secrets.token_urlsafe(15)
+mail = Mail(app)
 
 def Name():
     return session.get('NAME')
@@ -19,9 +30,43 @@ def Type():
 def index():
     return render_template('index.html', categories = Category.query.all(), name = Name(), type = Type())
 
+@app.route('/sendmail')
+def sendmail():
+    try:
+        msg = Message('Send Mail Tutorial!', sender='miniamazongroup20@gmail.com', recipients=['amrbedawi26@gmail.com'])
+        msg.body= "Here is your new password"
+        mail.send(msg)
+        return 'Mail sent'
+    except Exception as e:
+        return str(e)
+
 @app.route('/databaseview')
 def databaseview():
+    user = session.get('USERID')
+    question = Questions(user, 'Hell', 'O')
+    db_session.add(question)
+    db_session.commit()
+
     return render_template('databaseview.html', values=User.query.all())
+
+@app.route('/forgotpassword', methods=['POST', 'GET'])
+def forgotpassword():
+    error = None
+    if request.method == 'POST':
+        user = User.query.filter_by(email = request.form['email']).first()
+
+        if user is None:
+            error= 'Sorry, we cannot find an account with this email. Please try a different one!'
+            return render_template('forgotpassword.html', error=error)
+
+        msg = Message('Forgot password!', sender='miniamazongroup20@gmail.com', recipients=[user.email])
+        msg.body = 'Hello '+user.name+',\nYou or someone else has requested the password for your account. \nYour password is '+user.password+'. \nIf you made this request, then login with the provided password. If you did not make this request, then you can ignore this email.'
+        msg.html = render_template('retrieve_password_email.html', name=user.name, password=user.password)
+        mail.send(msg)
+        error='We have sent you your password!'
+        return render_template('forgotpassword.html', error=error)
+    else:
+        return render_template('forgotpassword.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -103,10 +148,6 @@ def signup():
         return render_template('signup.html')
     else:
         return redirect(url_for('index'))
-
-@app.route('/forgotpassword')
-def forgotpassword():
-    return render_template('forgotpassword.html')
 
 @app.route('/browse')
 def browse():
