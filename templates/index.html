@@ -15,4 +15,28 @@
 {% endif %}
 {% endwith %}
 
+<h1>Recommended Items</h1>
+
+<div>
+    <table>
+        <thead>
+          <th>Name</th>
+          <th>Brand</th>
+          <th>Color</th>
+        </thead>
+        <tbody>
+        {% for item in items %}
+          <tr>
+            <td> 
+                <form action="/item">
+                    <button type="submit" name="item_id" value= {{item.id}}>{{ item.name }}</button>
+                </form>
+            </td>
+            <td> {{ item.brand }}</td>
+            <td> {{ item.color }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+</div>
 {% endblock %}

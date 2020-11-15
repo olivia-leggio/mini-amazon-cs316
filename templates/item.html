@@ -10,28 +10,18 @@
 <!--<img src= "{{ items.imgurl }}" alt=" {{ items.name }}">-->
 
 <div class = "product-info">   
-    <div class ="product-head">
-        <h4> in {{ cats.cat.name }} </h4>
-        <p> Average rating: <p>
-        <p> Average price </p>
-    </div>
-    
-    <div class = "product-description">
-        <table class = "item-table">
-            <tbody>
-                <tr>
-                    <td> Brand </td>
-                    <td> {{ items.brand }}</td>
-                </tr>
-                <tr>
-                    <td> Color </td>
-                    <td> {{ items.color }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <h4> About this item </h4>
-        <p> {{ items.desc }}</p>
-    </div>
+    <h4> in {{ cats.cat.name }} </h4>
+    <p> Average rating: <p>
+    <p> Average price </p>
+</div>
+
+<div class = "product-info2">
+    <p><b>Brand</b>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{{ items.brand }}<p>
+    <p><b>Color</b>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {{ items.color }}<p>
+</div>
+<div class = "product-info">    
+    <h4> About this item </h4>
+    <p> {{ items.desc }}</p>
 </div>
 
 <div class = "product-sellers">
@@ -47,7 +37,6 @@
 <div class = "product-reviews">
 
 </div>
-
 
 
 {% endblock %}

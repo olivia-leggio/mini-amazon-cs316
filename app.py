@@ -25,10 +25,13 @@ def Name():
 def Type():
     return session.get('TYPE')
 
+def Cats():
+    return Category.query.all()
+
 
 @app.route('/')
 def index():
-    return render_template('index.html', categories = Category.query.all(), name = Name(), type = Type())
+    return render_template('index.html', items = Item.query.all(), categories = Cats(), name = Name(), type = Type())
 
 @app.route('/databaseview')
 def databaseview():
@@ -78,7 +81,7 @@ def login():
 
     # If you get here from a get request, render the page unless already logged in
     if session.get('USERID') is None: 
-        return render_template('login.html')
+        return render_template('login.html', categories = Cats())
     else:
         return redirect(url_for('index'))
 
@@ -147,7 +150,7 @@ def signup():
 
     # If you get here from a get request, render the page unless already logged in
     if session.get('USERID') is None: 
-        return render_template('signup.html')
+        return render_template('signup.html', categories = Cats())
     else:
         return redirect(url_for('index'))
 
@@ -178,7 +181,7 @@ def browse():
     incats = incats,
     items = items,
     me = User.query.filter_by(id=me_id).first(),
-    name = Name(), type = Type())
+    name = Name(), type = Type(), categories = Cats())
 
 @app.route('/add_item')
 def add_item():
@@ -201,7 +204,7 @@ def add_item():
 
 @app.route('/denied')
 def denied():
-     return render_template('denied.html')
+     return render_template('denied.html', categories = Cats())
 
 @app.route('/warehouse')
 def warehouse():
@@ -223,7 +226,7 @@ def warehouse():
       new_orders = new_orders,
       me = me,
       warehouse = Warehouse.query.filter_by(id=me.warehouse.warehouse_id).first(),
-      name = Name(), type = Type()
+      name = Name(), type = Type(), categories = Cats()
     )
 
 @app.route('/markdelivered')
@@ -259,7 +262,7 @@ def account():
 
     user = User.query.filter_by(id = me_id).first()
 
-    return render_template('account.html', user = user, name = Name(), type = Type())
+    return render_template('account.html', user = user, name = Name(), type = Type(), categories = Cats())
 
 @app.route('/update-account')
 def update_account():
@@ -314,7 +317,7 @@ def wallet():
 
     balance = engine.execute(sql_get_balance)
 
-    return render_template('wallet.html', balance = balance, name = Name(), type = Type())
+    return render_template('wallet.html', balance = balance, name = Name(), type = Type(), categories = Cats())
 
 @app.route('/update_balance')
 def update_balance():
@@ -344,7 +347,7 @@ def orderHistory():
 
     history_items = engine.execute(sql_get_history)
 
-    return render_template('order-history.html', items = history_items, name = Name(), type = Type())
+    return render_template('order-history.html', items = history_items, name = Name(), type = Type(), categories = Cats())
 
 @app.route('/cart')
 def cart():
@@ -363,7 +366,7 @@ def cart():
     num = len(rows)
     cart_copy = engine.execute(sql_get_cart)
 
-    return render_template('cart.html', items = cart_items, items2 = cart_copy, num = num, name = Name(), type = Type())
+    return render_template('cart.html', items = cart_items, items2 = cart_copy, num = num, name = Name(), type = Type(), categories = Cats())
 
 @app.route('/checkout', methods = ["GET", "POST"])
 def checkout():
@@ -392,7 +395,7 @@ def checkout():
         db_session.delete(cart)
         db_session.commit()
     
-    return render_template("finished-order.html", name = Name(), type = Type())
+    return render_template("finished-order.html", name = Name(), type = Type(), categories = Cats())
 
 @app.route('/delete-cart', methods = ["GET", "POST"])
 def delete_cart():
@@ -431,7 +434,7 @@ def results():
 
     return render_template(
         'results.html',
-        results = results, categories = Category.query.all(), name = Name(), type = Type()
+        results = results, name = Name(), type = Type(), categories = Cats()
         )
 
 @app.route('/item/')
@@ -441,8 +444,7 @@ def items():
     return render_template('item.html', 
         items = Item.query.filter_by(id=ids).first(),
         cats = InCat.query.filter_by(item_id=ids).first(),
-        name = Name(), 
-        type = Type()
+        name = Name(), type = Type(), categories = Cats()
         )
 
 @app.route('/seller')
@@ -462,7 +464,7 @@ def  sellerpage():
         warehouses = Warehouse.query.all(),
         cats = Category.query.all(),
         items = Item.query.all(),
-        name = Name(), type = Type()
+        name = Name(), type = Type(), categories = Cats()
         )
 
 @app.route('/test')
@@ -482,7 +484,7 @@ def test():
         listings = Listing.query.all(),
         carts = Cart.query.all(),
         orders = Order.query.all(),
-        name = Name(), type = Type()
+        name = Name(), type = Type(), categories = Cats()
     )
 
 @app.route('/delete_item')
