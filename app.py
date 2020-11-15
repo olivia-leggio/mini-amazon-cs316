@@ -187,12 +187,10 @@ def browse():
 def add_item():
   name = request.args.get("name")
   brand = request.args.get("brand")
-  color = request.args.get("color")
-  size = request.args.get("size")
   desc = request.args.get("desc")
   cat = request.args.get("cat")
 
-  item = Item(name, brand, color, size,desc,None)
+  item = Item(name, brand,desc,None)
   category = Category.query.filter_by(name=cat).first()
   assoc = InCat()
   assoc.cat = category
@@ -474,7 +472,7 @@ def test():
 
     return render_template(
         'test.html',
-        users = User.query.limit(25).all(),
+        users = User.query.all(),
         sellers = User.query.filter_by(type="Seller"),
         warehouses = Warehouse.query.all(),
         cats = Category.query.all(),
