@@ -163,26 +163,26 @@ def browse():
     
     cat = request.args.get('cat','ALL')
     incats = InCat.query.join(Category).filter_by(name=cat)
+    
+    sql_item_in_cat = '''SELECT *
+                        FROM items I
+                        WHERE EXISTS (SELECT * FROM categories C, inCategory A
+                                    WHERE I.id=A.item_id and C.id=A.cat_id
+                                    and C.name = :1)'''
+  
+    items = engine.execute(sql_item_in_cat,cat)
+    if cat == 'ALL':
+        incats = InCat.query.all()
+        items = Item.query.all()
 
-  sql_item_in_cat = '''SELECT *
-                    FROM items I
-                    WHERE EXISTS (SELECT * FROM categories C, inCategory A
-                                  WHERE I.id=A.item_id and C.id=A.cat_id
-                                  and C.name = :1)'''
-
-  items = engine.execute(sql_item_in_cat,cat)
-  if cat == 'ALL':
-      incats = InCat.query.all()
-      items = Item.query.all()
-
-  return render_template(
+    return render_template(
     'browse.html',
     cats = Category.query.all(),
     incats = incats,
     items = items,
     me = User.query.filter_by(id=me_id).first(),
     name = Name(), type = Type(), categories = Cats())
-
+    
 @app.route('/add_item')
 def add_item():
   name = request.args.get("name")
