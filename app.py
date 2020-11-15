@@ -156,13 +156,13 @@ def signup():
 
 @app.route('/browse')
 def browse():
-  me_id = session.get("USERID")
-  print(me_id)
-  if me_id is None:
-      return redirect(url_for('login'))
-
-  cat = request.args.get('cat','ALL')
-  incats = InCat.query.join(Category).filter_by(name=cat)
+    me_id = session.get("USERID")
+    print(me_id)
+    if me_id is None:
+        return redirect(url_for('login'))
+    
+    cat = request.args.get('cat','ALL')
+    incats = InCat.query.join(Category).filter_by(name=cat)
 
   sql_item_in_cat = '''SELECT *
                     FROM items I
