@@ -7,7 +7,7 @@
 {% block body %}
 <h1> {{ items.name }} </h1>
 
-<img src= "{{ items.imgurl }}" alt=" {{ items.name }}">
+<img src= "{{ items.imgurl }}" alt=" {{ items.name|truncate(30) }}">
 
 <div class = "product-info">   
     <h4> in {{ cats.cat.name }} </h4>
@@ -69,7 +69,7 @@
         <form action="/add_review" >
            <input type="hidden" value={{ items.id }} name="item_id">
            <br />
-           <label> Review of {{ items.name }}</label><br />
+           <label> Review of {{ items.name|truncate(50) }}</label><br />
            <input type="text" name="text" />
            <br />
            <br />

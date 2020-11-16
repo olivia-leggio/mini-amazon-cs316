@@ -18,14 +18,14 @@
         <tbody>
         {% for result in results %}
             <tr>
-                <td> <img src= {{result.imgurl}} alt=" {{ result.name }}"> </td>
+                <td> <img src= {{result.imgurl}} alt=" {{ result.name|truncate(30) }}"> </td>
                 <td> 
                     <form action="/item">
-                    <button type="submit" name="item_id" value= {{result.id}}>{{ result.name }}</button>
+                    <button type="submit" name="item_id" value= {{result.id}}>{{ result.name|truncate(50) }}</button>
                     </form>
                 </td>
                 <td> {{ result.brand }}</td>
-                <td> {{ result.desc }}</td>
+                <td> {{ result.desc|truncate(100) }}</td>
             </tr>
         {% endfor %}
         </tbody>
