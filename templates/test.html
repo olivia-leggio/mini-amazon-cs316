@@ -75,6 +75,7 @@
     <th>id</th>
     <th>Address</th>
     <th>Capacity</th>
+    <th>Currently Filled</th>
   </thead>
   <tbody>
   {% for house in warehouses %}
@@ -82,6 +83,13 @@
       <td> {{ house.id }}</td>
       <td>{{ house.street }} {{ house.city }} {{ house.state }} {{ house.zip }}</td>
       <td> {{ house.capacity }}</td>
+      <td>
+        {% set ftotal= {'total': 0} %}
+        {%- for l in all_listings if l.warehouse==house -%}
+        {% if ftotal.update({'total': ftotal.total + l.amount }) %}{% endif %}
+        {%- endfor -%}
+        {{ftotal.total}}
+      </td>
     </tr>
   {% endfor %}
   </tbody>

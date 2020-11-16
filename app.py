@@ -4,6 +4,7 @@ from database import db_session, engine
 from datetime import datetime
 import secrets
 from flask_mail import Mail, Message
+from sqlalchemy.sql import func
 
 app = Flask(__name__)
 app.config.update(
@@ -217,12 +218,18 @@ def warehouse():
 
     past_orders = Order.query.filter_by(warehouse_id=me.warehouse.warehouse_id).filter_by(delivered=True)
     new_orders = Order.query.filter_by(warehouse_id=me.warehouse.warehouse_id).filter_by(delivered=False)
+    listings = Listing.query.filter_by(warehouse_id=me.warehouse.warehouse_id)
+
+    filled = 0
+    for l in listings:
+        filled = filled + l.amount
 
     return render_template(
       'warehouse.html',
       past_orders = past_orders,
       new_orders = new_orders,
       me = me,
+      filled = filled,
       warehouse = Warehouse.query.filter_by(id=me.warehouse.warehouse_id).first(),
       name = Name(), type = Type(), categories = Cats()
     )
@@ -446,7 +453,7 @@ def items():
         )
 
 @app.route('/seller')
-def  sellerpage():
+def seller():
     me_id = session.get("USERID")
     if me_id is None:
         return redirect(url_for('login'))
@@ -472,16 +479,17 @@ def test():
 
     return render_template(
         'test.html',
-        users = User.query.all(),
+        users = User.query.order_by(func.random()).limit(30).all(),
         sellers = User.query.filter_by(type="Seller"),
         warehouses = Warehouse.query.all(),
         cats = Category.query.all(),
-        incats = InCat.query.all(),
-        items = Item.query.all(),
-        reviews = Review.query.all(),
-        listings = Listing.query.all(),
-        carts = Cart.query.all(),
-        orders = Order.query.all(),
+        incats = InCat.query.order_by(func.random()).limit(30).all(),
+        items = Item.query.order_by(func.random()).limit(30).all(),
+        reviews = Review.query.order_by(func.random()).limit(30).all(),
+        listings = Listing.query.order_by(func.random()).limit(30).all(),
+        all_listings = Listing.query.all(),
+        carts = Cart.query.order_by(func.random()).limit(30).all(),
+        orders = Order.query.order_by(func.random()).limit(30).all(),
         name = Name(), type = Type(), categories = Cats()
     )
 
@@ -588,10 +596,20 @@ def add_listing():
     listing.seller = User.query.filter_by(type="Seller").filter_by(id=seller_id).first()
     listing.warehouse = Warehouse.query.filter_by(id=wh_id).first()
 
+    other_listings = Listing.query.filter_by(warehouse_id=wh_id).all()
+    current_full = 0
+    for ol in other_listings:
+        current_full = current_full + ol.amount
+
+    if current_full + int(amount) > listing.warehouse.capacity:
+        flash("That warehouse cannot take that many items")
+        return(redirect(url_for('seller')))
+
+
     db_session.add(listing)
     db_session.commit()
 
-    return redirect(url_for('test'))
+    return redirect(url_for('seller'))
 
 @app.route('/add_cart')
 def add_cart():

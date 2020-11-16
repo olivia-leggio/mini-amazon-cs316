@@ -3,6 +3,14 @@
 {% block body %}
 <h1>Seller</h1>
 
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+  {% for msg in messages %}
+    <p style="color:red">{{msg}}</p>
+  {% endfor %}
+{% endif %}
+{% endwith %}
+
 <h2>Your Current Listings</h2>
 <table>
     <thead>

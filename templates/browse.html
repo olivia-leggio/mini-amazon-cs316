@@ -29,7 +29,7 @@
     <tr>
       <td> {{ item.name }}</td>
       <td> {{ item.brand }}</td>
-      <td> {{ item.desc }}</td>
+      <td> {{ item.desc |truncate(100)}}</td>
     </tr>
   {% endfor %}
   </tbody>

@@ -56,7 +56,7 @@ with open('init_data/items_add.csv', 'r') as read_obj:
 managers = User.query.filter_by(type="Manager")
 
 for m in managers:
-    whouse = Warehouse(m.street,m.city,m.zip,m.state,randrange(10000,1000000,10000))
+    whouse = Warehouse(m.street,m.city,m.zip,m.state,randrange(6000,15000,1000))
     ml = ManagerLocation()
     ml.manager = m
     ml.warehouse = whouse
@@ -77,7 +77,7 @@ with open('init_data/listings_add.csv', 'r') as read_obj:
         item = Item.query.filter_by(id=item_id).first()
         seller_id = row['seller_id']
         seller = User.query.filter_by(id=seller_id).first()
-        whouse_id = randrange(1,20)
+        whouse_id = randrange(1,21)
         whouse = Warehouse.query.filter_by(id=whouse_id).first()
         price = row['price']
         amount = row['amount']
@@ -111,7 +111,7 @@ with open('init_data/reviews_add.csv', 'r') as read_obj:
         seller_id = randrange(22,121)
         seller = User.query.filter_by(id=seller_id).first()
 
-        review = Review(text,datetime.now(),rating,randrange(1,5))
+        review = Review(text,datetime.now(),rating,randrange(1,6))
         review.item = item
         review.user = user
         review.seller = seller
@@ -141,7 +141,7 @@ warehouses = Warehouse.query.all()
 for w in warehouses:
     for n in range(1,25):
         lst = Listing.query.order_by(func.random()).first()
-        amount = randrange(1,5)
+        amount = randrange(1,6)
 
         o1 = Order(datetime.now(),True,lst.price,amount)
         o1.user = User.query.order_by(func.random()).first()
@@ -152,7 +152,7 @@ for w in warehouses:
 
     for k in range(1,25):
         lst = Listing.query.order_by(func.random()).first()
-        amount = randrange(1,5)
+        amount = randrange(1,6)
 
         o1 = Order(datetime.now(),False,lst.price,amount)
         o1.user = User.query.order_by(func.random()).first()
