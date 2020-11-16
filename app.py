@@ -424,16 +424,28 @@ def results():
                     WHERE I.name LIKE '%{}%' and EXISTS (SELECT * FROM categories C, inCategory A
                                   WHERE I.id=A.item_id and C.id=A.cat_id
                                   and C.name = :1)'''.format(query)
+    sql_listings1 = '''SELECT L.price, L.id
+                    FROM items I, listings L
+                    WHERE I.name LIKE '%{}%' and L.item_id = I.id and EXISTS (SELECT * FROM categories C, inCategory A
+                                  WHERE I.id=A.item_id and C.id=A.cat_id
+                                  and C.name = :1)'''.format(query)
 
     results = engine.execute(sql_items_cat,category)
-    
+    listings = engine.execute(sql_listings1,category)
+
     sql_items_all = '''SELECT *
-                         FROM items I
-                         WHERE I.name LIKE '%{}%' '''.format(query)
+                        FROM items I
+                        WHERE I.name LIKE '%{}%' '''.format(query)
+    
+    sql_listings2 = '''SELECT L.price, L.id
+                        FROM items I, listings L
+                        WHERE I.name LIKE '%{}%' and L.item_id = I.id '''.format(query)
     results1 = engine.execute(sql_items_all)
+    listings1 = engine.execute(sql_listings2)
 
     if category == 'ALL':
-      results = results1
+        results = results1
+        listings = listings1
 
     return render_template(
         'results.html',
@@ -586,7 +598,7 @@ def add_review():
     db_session.add(review)
     db_session.commit()
 
-    return redirect(url_for('test'))
+    return redirect(url_for('account'))
 
 @app.route('/add_listing')
 def add_listing():
@@ -617,7 +629,7 @@ def add_listing():
 
 @app.route('/add_cart')
 def add_cart():
-    user_id = request.args.get("user_id")
+    user_id = ID()
     listing_id = request.args.get("listing_id")
     amount = request.args.get("amount")
 
@@ -628,7 +640,7 @@ def add_cart():
     db_session.add(cart)
     db_session.commit()
 
-    return redirect(url_for('test'))
+    return redirect(url_for('cart'))
 
 @app.route('/process_checkout')
 def process_checkout():

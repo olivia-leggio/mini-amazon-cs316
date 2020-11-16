@@ -43,6 +43,19 @@
                             <td><b>Amount Available: </b></td>
                             <td>{{ l.amount }} </td>
                         </tr>
+                        <tr>
+                            <td> 
+                                <br>
+                                <form action="/add_cart" >
+                                    <input type="hidden" value={{l.id}} name="listing_id">
+                                    <label> Add Amount</label>
+                                    <input type="number" name="amount" min=1 />
+                                    <br />
+                                    <br />
+                                    <input type="submit" value="Add to Cart" />
+                               </form> 
+                            </td>
+                        </tr>
                     </table>
                 </td>
                 {% endfor %}
