@@ -10,11 +10,14 @@
 {% block body %}
 <!--no idea why I have to put this as a loop to make it work-->
 {% for entry in balance %}
-    <h3>Your balance is {{ entry.balance }}</h3>
+    <br>
+    <h3 id = "balance">Your balance is {{ entry.balance }}</h3>
 {% endfor %}
 
 <form action = "/update_balance">
-    <input type = "number" name = "added_balance" step = 0.01>
-    <input type = "submit" value = "add balance">
+    <div id = "balance-in">
+        <input type = "number" name = "added_balance" step = 0.01>
+        <input type = "submit" value = "add balance">
+    </div>
 </form>
 {% endblock %}
