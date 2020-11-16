@@ -7,8 +7,6 @@ class Item(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(20), unique=False)
     brand = Column(String(20), unique=False)
-    color = Column(String(20), unique=False)
-    size = Column(Integer, unique=False)
     desc = Column(Text, unique=False)
     imgurl = Column(Text, unique=False,nullable=True)
     categories = relationship("InCat",back_populates="item",cascade="all, delete-orphan")
@@ -17,11 +15,9 @@ class Item(Base):
     orders = relationship("Order",back_populates="item",cascade="all, delete-orphan")
 
 
-    def __init__(self, name=None, brand=None, color=None, size=None,desc=None,img=None):
+    def __init__(self, name=None, brand=None,desc=None,img=None):
         self.name = name
         self.brand = brand
-        self.color = color
-        self.size = size
         self.desc = desc
         self.imgurl = img
 
@@ -51,8 +47,8 @@ class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     email = Column(String(20), unique=True)
-    name = Column(String(30), unique=False)
     password = Column(String(20), unique=False)
+    name = Column(String(30), unique=False)
     balance = Column(Float, unique = False)
     type = Column(String(20), unique=False)
     street = Column(String(20), unique=False)

@@ -22,8 +22,6 @@
   <thead>
     <th>Name</th>
     <th>Brand</th>
-    <th>Color</th>
-    <th>Size</th>
     <th>Description</th>
   </thead>
   <tbody>
@@ -31,8 +29,6 @@
     <tr>
       <td> {{ item.name }}</td>
       <td> {{ item.brand }}</td>
-      <td> {{ item.color }}</td>
-      <td> {{ item.size }}</td>
       <td> {{ item.desc }}</td>
     </tr>
   {% endfor %}
@@ -50,16 +46,6 @@
   <label>Brand</label><br />
   <input type="text" name="brand" />
   <br/>
-  <br />
-
-  <label>Color</label><br />
-  <input type="text" name="color" />
-  <br />
-  <br />
-
-  <label>Size</label><br />
-  <input type="number" name="size" />
-  <br />
   <br />
 
   <label>Description</label><br/>
