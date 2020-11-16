@@ -1,7 +1,49 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<h1>Seller</h1>
+<title>Seller Portal</title>
+
+
+<h1>Seller Portal</h1>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+  {% for msg in messages %}
+    <p style="color:red">{{msg}}</p>
+  {% endfor %}
+{% endif %}
+{% endwith %}
+
+<h2>Add a Listing</h2>
+<h4>Search for an item to add a listing for it.</h4>
+<form id = "searchbaraddlisting" action = "/seller">
+  <input id = "searchtext" type = "text" name = "searchtext">
+</form>
+{% if results %}
+<table align="center">
+  <thead>
+      <!--<th>  </th>-->
+      <th>Name</th>
+      <th>Brand</th>
+      <th>Description</th>
+  </thead>
+  <tbody>
+  {% for result in results %}
+      <tr>
+          <td> {{ result.name }}</td>
+          <td> {{ result.brand }}</td>
+          <td> {{ result.desc }}</td>
+          <td> 
+            <form action="/addlistingpage">
+            <button type="submit" name="item_id" value= {{result.id}}>Add Listing</button>
+            </form>
+        </td>
+      </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}
@@ -12,9 +54,8 @@
 {% endwith %}
 
 <h2>Your Current Listings</h2>
-<table>
+<table align="center">
     <thead>
-
       <th>Item</th>
       <th>Price</th>
       <th>Amount</th>
@@ -27,38 +68,59 @@
         <td> ${{ l.price }}</td>
         <td> {{ l.amount }}</td>
         <td> {{ l.warehouse.id }}</td>
+        <td>
+          <form action="/delete_listing">
+            <button type="submit" name="listing_id" value= {{ l.id}} >Delete</button>
+          </form>
+        </td>
+        <td>
+          <form action="/addlistingpage">
+            <button type="submit" name="listing_id" value= {{ l.id}} >Edit</button>
+          </form>
       </tr>
     {% endfor %}
     </tbody>
   </table>
 
-<h2>Add a Listing</h2>
-<form action="/add_listing" >
-     <select name="item_id" id="item_id">
-        {% for item in items %}
-        <option value = {{ item.id }} > {{ item.name }} </option>
+
+
+
+
+   <h2>Add an Item<h2>
+     <h4>If the item you are trying to add a listing for does not exist on the site yet, add it below.</h4>
+    <form action="/add_item" >
+      <label>Item Name</label><br />
+      <input type="text" name="name" />
+      <br />
+      <br />
+    
+      <label>Brand</label><br />
+      <input type="text" name="brand" />
+      <br/>
+      <br />
+    
+      <label>Description</label><br/>
+      <input type="text" name="desc" />
+      <br />
+      <br />
+    
+      <label>Primary Category</label><br />
+      <select name="cat" id="cat">
+        {% for cat in cats %}
+        <option value = {{ cat.name }} > {{ cat.name }} </option>
         {% endfor %}
       </select>
-      <select name="warehouse_id" id="warehouse_id">
-         {% for wh in warehouses %}
-         <option value = {{ wh.id }} > {{ wh.id }} </option>
-         {% endfor %}
-       </select>
       <br />
       <br />
-      <label>Unit Price</label>
-      <input type="number" name="price" min=1 step=0.01 />
-      <br />
-      <br />
-      <label>Amount</label>
-      <input type="number" name="amount" min=1 />
-      <br />
-      <br />
-     <input type="submit" />
-   </form>
-
-
-
+    
+      <input type="submit" />
+    </form>
 
 
 {% endblock %}
+
+
+
+
+
+

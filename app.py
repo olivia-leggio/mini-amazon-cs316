@@ -495,12 +495,21 @@ def seller():
     if me.type != 'Seller':
         return redirect(url_for('denied'))
 
+    results = None
+    if request.args.get("searchtext"):
+        query = request.args.get("searchtext")
+        sql_items_all = '''SELECT *
+                         FROM items I
+                         WHERE I.name LIKE '%{}%' '''.format(query)
+        results = engine.execute(sql_items_all)
+
     return render_template('seller.html',
         seller = me,
         listings = Listing.query.filter_by(seller_id=me_id).all(),
         warehouses = Warehouse.query.all(),
         cats = Category.query.all(),
         items = Item.query.all(),
+        results = results,
         name = Name(), type = Type(), categories = Cats()
         )
 
@@ -606,6 +615,33 @@ def add_review():
 
     return redirect(url_for('account'))
 
+@app.route('/addlistingpage')
+def addlistingpage():
+    me_id = session.get("USERID")
+    if me_id is None:
+        return redirect(url_for('login'))
+
+    me = User.query.filter_by(id=me_id).first()
+
+    if me.type != 'Seller':
+        return redirect(url_for('denied'))
+
+    item_id = request.args.get("item_id")
+    
+    listing = None
+    if request.args.get("listing_id"):
+        listing = Listing.query.filter_by(id = request.args.get("listing_id")).first()
+        item_id = listing.item_id
+
+    return render_template(
+        'addlistingpage.html',
+        seller = me,
+        item = Item.query.filter_by(id=item_id).first(),
+        warehouses = Warehouse.query.all(),
+        listing = listing,
+        name = Name(), type = Type()
+        )
+
 @app.route('/add_listing')
 def add_listing():
     me_id = session.get("USERID")
@@ -639,6 +675,42 @@ def add_listing():
 
 
     db_session.add(listing)
+    db_session.commit()
+
+    return redirect(url_for('seller'))
+
+@app.route('/edit_listing')
+def edit_listing():
+    me_id = session.get("USERID")
+    if me_id is None:
+        return redirect(url_for('login'))
+
+    me = User.query.filter_by(id=me_id).first()
+
+    if me.type != 'Seller':
+        return redirect(url_for('denied'))
+
+    seller_id = me_id
+    listing_id = request.args.get("listing_id")
+    new_wh_id = request.args.get("updated_warehouse_id")
+    new_price = request.args.get("updated_price")
+    new_amount = request.args.get("updated_amount")
+
+    listing = Listing.query.filter_by(id=listing_id).first()
+
+    listing.warehouse_id = new_wh_id
+    listing.price = new_price
+    listing.amount = new_amount
+
+    db_session.commit()
+
+    return redirect(url_for('seller'))
+
+@app.route('/delete_listing')
+def delete_listing():
+    listing_id = request.args.get("listing_id")
+    listing = Listing.query.filter_by(id=listing_id).first()
+    db_session.delete(listing)
     db_session.commit()
 
     return redirect(url_for('seller'))
