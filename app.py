@@ -597,6 +597,10 @@ def new_house():
 
 @app.route('/add_review')
 def add_review():
+    me_id = session.get("USERID")
+    if me_id is None:
+        return redirect(url_for('login'))
+        
     user_id = ID()
     item_id = request.args.get("item_id")
     seller_id = request.args.get("seller_id")
