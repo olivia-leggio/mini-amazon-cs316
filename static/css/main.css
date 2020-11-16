@@ -193,6 +193,14 @@ span.psw {
     width: 100%;
   }
 }
+
+.item-pic {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
+}
+
 /* style for search results page */
 .search-results {
   margin-left: 100px;

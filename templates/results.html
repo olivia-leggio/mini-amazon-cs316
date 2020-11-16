@@ -18,7 +18,7 @@
         <tbody>
         {% for result in results %}
             <tr>
-                <td> <img src= {{result.imgurl}} alt=" {{ result.name|truncate(30) }}"> </td>
+                <td> <img src = "{{ url_for('static', filename = result.imgurl ) }}" width = "68" height = "68"> </td>
                 <td> 
                     <form action="/item">
                     <button type="submit" name="item_id" value= {{result.id}}>{{ result.name|truncate(50) }}</button>

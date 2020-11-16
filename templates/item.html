@@ -7,7 +7,7 @@
 {% block body %}
 <h1> {{ items.name }} </h1>
 
-<img src= "{{ items.imgurl }}" alt=" {{ items.name|truncate(30) }}">
+<img src = "{{ url_for('static', filename = items.imgurl ) }}" width = "200" height = "200" class="item-pic" >
 
 <div class = "product-info">   
     <h4> in {{ cats.cat.name }} </h4>
