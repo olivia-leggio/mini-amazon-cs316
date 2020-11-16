@@ -112,6 +112,9 @@ def signup():
         zipcode = int(req['zip'])
         balance = float(0)
         type_ = 'User'
+        if req.get('userTypeSeller'):
+            type_ = 'Seller'
+        
 
         confirm_email = req['confirm_email']
         confirm_password = req['confirm_password']
