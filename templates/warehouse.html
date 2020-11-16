@@ -6,6 +6,8 @@
 
 {% block body %}
 <h1>You are {{ me.name }}, viewing Warehouse {{ warehouse.id }}</h1>
+<h2>The warehouse is located at {{ warehouse.street}} {{ warehouse.city }}, {{warehouse.state}}, {{warehouse.zip}}</h2>
+<h2>Capacity: {{ warehouse.capacity }}  Currently Full: {{ filled }}</h2>
 
 <h1>Orders to be completed in this warehouse</h1>
 <h3>Pending Orders</h3>
