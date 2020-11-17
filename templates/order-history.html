@@ -29,7 +29,11 @@
             </tr>
         {% else %}
             <tr>
-                <td>{{ item.name }}</td>
+              <td>
+                  <form action="/item">
+                  <button type="submit" name="item_id" value= {{item.id}}>{{ item.name|truncate(50) }}</button>
+                  </form>
+              </td>
                 <td>in progress</td>
                 <td>{{ item.amount }}</td>
             </tr>
