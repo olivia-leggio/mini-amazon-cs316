@@ -225,7 +225,7 @@ def add_item():
   assoc.item = item
   assoc.cat = category
   item.categories.append(assoc)
-  cat.items.append(assoc)
+  category.items.append(assoc)
   db_session.add(item)
   db_session.add(assoc)
   db_session.commit()
