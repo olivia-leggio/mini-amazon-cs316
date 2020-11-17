@@ -5,6 +5,8 @@ from datetime import datetime
 import secrets
 from flask_mail import Mail, Message
 from sqlalchemy.sql import func, text
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
 app.config.update(
@@ -16,8 +18,16 @@ app.config.update(
     MAIL_PASSWORD='ilovecs12!'
 )
 
+UPLOAD_FOLDER = 'static/img/'
+ALLOWED_EXTENSIONS = {'jpg'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SECRET_KEY'] = secrets.token_urlsafe(15)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mail = Mail(app)
 
 def Name():
@@ -203,17 +213,20 @@ def browse():
 
 @app.route('/add_item')
 def add_item():
-  name = request.args.get("name")
-  brand = request.args.get("brand")
-  desc = request.args.get("desc")
-  cat = request.args.get("cat")
+  name = request.args.get('name',None)
+  brand = request.args.get('brand',None)
+  desc = request.args.get('desc',None)
+  cat = request.args.get('cat',None)
 
   item = Item(name, brand,desc,None)
   category = Category.query.filter_by(name=cat).first()
   assoc = InCat()
+  assoc.item = item
   assoc.cat = category
   item.categories.append(assoc)
+  cat.items.append(assoc)
   db_session.add(item)
+  db_session.add(assoc)
   db_session.commit()
 
   return redirect(url_for('browse'))
@@ -411,16 +424,18 @@ def cart():
 def checkout():
     me_id = session.get("USERID")
     if me_id is None:
-        return redirect(url_for('login'))
+         return redirect(url_for('login'))
 
     me = User.query.filter_by(id=me_id).first()
     if request.method == 'POST':
-        checkout_list = me.carts
+        checkout_list = request.form.getlist("cartItem")
 
     money = 0
-    for cart in checkout_list:
-        money = money + cart.listing.price * cart.amount
-        if cart.amount > cart.listing.amount:
+    for id in checkout_list:
+         cart_id = id
+         cart = Cart.query.filter_by(id=cart_id).first()
+         money = money + cart.listing.price * cart.amount
+         if cart.amount > cart.listing.amount:
             item_name = cart.listing.item.name[:40]
             flash("There aren't enough of "+ item_name + "!!!")
             return(redirect(url_for('cart')))
@@ -430,7 +445,9 @@ def checkout():
         return(redirect(url_for('cart')))
 
 
-    for cart in checkout_list:
+    for id in checkout_list:
+        cart_id = id
+        cart = Cart.query.filter_by(id=cart_id).first()
         order = Order(datetime.now(),False,cart.listing.price,cart.amount)
         order.user = cart.user
         order.seller = cart.listing.seller
@@ -680,6 +697,9 @@ def add_review():
     text = request.args.get("text")
     item_rating = request.args.get("item_rating")
 
+    if not item_rating:
+        item_rating = 1
+
     review = Review(text,datetime.now(),item_rating,None)
 
     if seller_id != 'NONE':
@@ -800,6 +820,9 @@ def add_cart():
     user_id = ID()
     listing_id = request.args.get("listing_id")
     amount = request.args.get("amount")
+
+    if not amount:
+        amount = 1
 
     cart = Cart(amount)
     cart.listing = Listing.query.filter_by(id=listing_id).first()

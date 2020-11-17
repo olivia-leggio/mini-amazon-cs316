@@ -33,7 +33,7 @@
             <img src = "{{ url_for('static', filename = 'img/logo1.png') }}" width = "68" height = "68" id = "logo">
         </a>
         <form id = "searchbar" action = "/search-results" >
-          <div style="float:left; position: relative; top:40%;">
+          <div style="float:left;position: relative; top:40%;">
             <select name="search-cats" id="search-cats" >
                 <option value = "ALL"> All </option>
                 {% for category in categories %}
@@ -72,7 +72,7 @@
             <img src = "{{ url_for('static', filename = 'img/logo1.png') }}" width = "68" height = "68" id = "logo">
         </a>
         <form id = "searchbar" action = "/search-results">
-          <div style="float:left; position: relative; top:40%;">
+          <div style="float:left;position: relative; top:40%;">
             <select name="search-cats" id="search-cats">
                 <option value = "ALL"> All </option>
                 {% for category in categories %}
@@ -82,6 +82,7 @@
           </div>
           <div style="float:left;">
             <input id = "searchtext" type = "text" name = "searchtext">
+          </div>
         </form>
     </div>
 
@@ -97,7 +98,7 @@
             <img src = "{{ url_for('static', filename = 'img/logo1.png') }}" width = "68" height = "68" id = "logo">
         </a>
         <form id = "searchbar" action = "/search-results">
-          <div style="float:left; position: relative; top:40%;">
+          <div style="float:left;position: relative; top:40%;">
             <select name="search-cats" id="search-cats">
                 <option value = "ALL"> All </option>
                 {% for category in categories %}

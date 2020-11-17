@@ -21,6 +21,7 @@
 <div id = "checkouts">
     {% if num > 0 %}
     <h3>Cart</h3>
+      <form id = "cart-checkout" action = "/checkout" method = "POST">
         <table #cart>
             <tr>
                 <th>       </th>
@@ -34,9 +35,7 @@
                 <tr>
                     <td><input type = "checkbox" name = "cartItem" value = "{{ item.id }}"></td>
                     <td>
-                        <form action="/item">
-                        <button name="item_id" value= {{item.item_id}}>{{ item.name|truncate(50) }}</button>
-                        </form>
+                        <a href = "/item/?item_id={{ item.item_id }}">{{item.name|truncate(50)}}</a>
                     </td>
                     <td>{{ item.price }}</td>
                     <td>{{ item.amount }}</td>
@@ -57,7 +56,6 @@
             {% endfor %}
             </tbody>
         </table>
-    <form id = "cart-checkout" action = "/checkout" method = "POST">
     </form>
     <button id = "checkout_button" type = "submit" form = "cart-checkout">checkout</button>
     <button id = "toggle_delete" onclick = "toggleDelete()">remove items</button>
