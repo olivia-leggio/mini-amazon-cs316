@@ -20,9 +20,9 @@
             <li class = "dropdown">
                 <a href = "javascript:void(0)" class = "dropmenu">Hi, {{ name }}</a>
                 <div class = "dropmenu-content">
-                    <a href = "/account">account</a>
-                    <a href = "/wallet">balance</a>
-                    <a href = "/history">order history</a>
+                    <a href = "/account">Account</a>
+                    <a href = "/wallet">Balance</a>
+                    <a href = "/history">Order History</a>
                     <a href = "/browse">Browse Items</a>
                     <a href = "/logout">Log Out</a>
                 </div>
@@ -49,15 +49,16 @@
             <li class = "dropdown">
                 <a href = "javascript:void(0)" class = "dropmenu">Hi, {{ name }}</a>
                 <div class = "dropmenu-content">
-                    <a href = "/account">account</a>
-                    <a href = "/wallet">balance</a>
-                    <a href = "/history">order history</a>
+                    <a href = "/account">Account</a>
+                    <a href = "/wallet">Balance</a>
+                    <a href = "/history">Order History</a>
                     <a href = "/browse">Browse Items</a>
                     {% if type == 'Manager' %}
                         <a href = "/warehouse">Warehouse Manager</a>
                     {% endif %}
                     {% if type == 'Seller' %}
                         <a href = "/seller">Seller Portal</a>
+                        <a href = "/trade-history">Trade History</a>
                     {% endif %}
                     <a href = "/logout">Log Out</a>
                 </div>

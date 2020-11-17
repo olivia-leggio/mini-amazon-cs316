@@ -361,13 +361,26 @@ def orderHistory():
     if me_id is None:
         return redirect(url_for('login'))
 
-    sql_get_history = text('''SELECT I.name AS name, delivered, amount, I.id AS id
-                         FROM orders O, items I
-                         WHERE user_id = :id AND item_id = I.id''')
+    sql_get_history = text('''SELECT I.name AS name, delivered, amount, price, date, I.id AS id, I.imgurl AS imgurl, U.name AS other_name
+                         FROM orders O, items I, Users U
+                         WHERE user_id = :id AND item_id = I.id AND seller_id = U.id''')
 
     history_items = engine.execute(sql_get_history,id=me_id)
 
-    return render_template('order-history.html', items = history_items, name = Name(), type = Type(), categories = Cats())
+    return render_template('order-history.html', other = "Seller",title = 'Previous Orders',items = history_items, name = Name(), type = Type(), categories = Cats())
+
+@app.route('/trade-history')
+def tradeHistory():
+    me_id = session.get("USERID")
+    if me_id is None:
+        return redirect(url_for('login'))
+
+    sql_get_sell_history = text('''SELECT I.name AS name, delivered, amount, price, date, I.id AS id, I.imgurl AS imgurl, U.name AS other_name
+                         FROM orders O, items I, Users U
+                         WHERE seller_id = :id AND item_id = I.id AND O.user_id = U.id''')
+    history_items = engine.execute(sql_get_sell_history,id=me_id)
+
+    return render_template('order-history.html', other = "Buyer", title = 'Previously Sold Items', items = history_items, name = Name(), type = Type(), categories = Cats())
 
 @app.route('/cart')
 def cart():

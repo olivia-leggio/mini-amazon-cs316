@@ -33,7 +33,7 @@
           <td> {{ result.name }}</td>
           <td> {{ result.brand }}</td>
           <td> {{ result.desc }}</td>
-          <td> 
+          <td>
             <form action="/addlistingpage">
             <button type="submit" name="item_id" value= {{result.id}}>Add Listing</button>
             </form>
@@ -64,7 +64,11 @@
     <tbody>
     {% for l in listings %}
       <tr>
-        <td> {{ l.item.name }}</td>
+        <td>
+            <form action="/item">
+            <button name="item_id" value= {{l.item.id}}>{{ l.item.name|truncate(50) }}</button>
+            </form>
+        </td>
         <td> ${{ l.price }}</td>
         <td> {{ l.amount }}</td>
         <td> {{ l.warehouse.id }}</td>
@@ -93,17 +97,17 @@
       <input type="text" name="name" />
       <br />
       <br />
-    
+
       <label>Brand</label><br />
       <input type="text" name="brand" />
       <br/>
       <br />
-    
+
       <label>Description</label><br/>
       <input type="text" name="desc" />
       <br />
       <br />
-    
+
       <label>Primary Category</label><br />
       <select name="cat" id="cat">
         {% for cat in cats %}
@@ -112,15 +116,9 @@
       </select>
       <br />
       <br />
-    
+
       <input type="submit" />
     </form>
 
 
 {% endblock %}
-
-
-
-
-
-

@@ -8,34 +8,46 @@
 {% endblock %}
 
 {% block body %}
-<h3>Order History</h3>
+<h1> {{ title }}</h1>
 <table>
     <thead>
+        <th>      </th>
         <th>Item Name</th>
         <th>Delivered</th>
         <th>Quantity</th>
+        <th>Price</th>
+        <th> {{ other }}</th>
+        <th>Date</th>
     </thead>
     <tbody>
     {% for item in items %}
         {% if item.delivered %}
             <tr>
+              <td> <img src = "{{ url_for('static', filename = item.imgurl ) }}" width = "68" height = "68"> </td>
               <td>
                   <form action="/item">
                   <button type="submit" name="item_id" value= {{item.id}}>{{ item.name|truncate(50) }}</button>
                   </form>
               </td>
-                <td>delivered</td>
-                <td>{{ item.amount }}</td>
+              <td>delivered</td>
+              <td>{{ item.amount }}</td>
+              <td>${{ item.price }}</td>
+              <td>{{ item.other_name }}</td>
+              <td>{{ item.date |truncate(13)}}</td>
             </tr>
         {% else %}
             <tr>
+              <td> <img src = "{{ url_for('static', filename = item.imgurl ) }}" width = "68" height = "68"> </td>
               <td>
                   <form action="/item">
                   <button type="submit" name="item_id" value= {{item.id}}>{{ item.name|truncate(50) }}</button>
                   </form>
               </td>
-                <td>in progress</td>
-                <td>{{ item.amount }}</td>
+              <td>in progress</td>
+              <td>{{ item.amount }}</td>
+              <td>${{ item.price }}</td>
+              <td>{{ item.other_name }}</td>
+              <td>{{ item.date |truncate(13)}}</td>
             </tr>
         {% endif %}
     {% endfor %}
