@@ -75,7 +75,9 @@ li a:hover, .dropdown:hover {
     position: absolute;
     left: 30%;
     top: 20%;
+    height: 60%;
 }
+
 #searchquery {
     position: absolute;
     width: 400%;
@@ -261,4 +263,3 @@ span.psw {
 .itr {
     min-width: 490px;
 }
-

@@ -32,14 +32,18 @@
         <a href = "/">
             <img src = "{{ url_for('static', filename = 'img/logo1.png') }}" width = "68" height = "68" id = "logo">
         </a>
-        <form id = "searchbar" action = "/search-results">
-            <select name="search-cats" id="search-cats">
+        <form id = "searchbar" action = "/search-results" >
+          <div style="float:left; position: relative; top:40%;">
+            <select name="search-cats" id="search-cats" >
                 <option value = "ALL"> All </option>
                 {% for category in categories %}
                 <option value = {{category.name}} > {{ category.name }} </option>
                 {% endfor %}
             </select>
+          </div>
+          <div style="float:left;">
             <input id = "searchtext" type = "text" name = "searchtext">
+          </div>
         </form>
     </div>
     {% elif type in ['User', 'Seller', 'Manager'] %}
@@ -68,12 +72,15 @@
             <img src = "{{ url_for('static', filename = 'img/logo1.png') }}" width = "68" height = "68" id = "logo">
         </a>
         <form id = "searchbar" action = "/search-results">
+          <div style="float:left; position: relative; top:40%;">
             <select name="search-cats" id="search-cats">
                 <option value = "ALL"> All </option>
                 {% for category in categories %}
                 <option value = {{category.name}} > {{ category.name }} </option>
                 {% endfor %}
             </select>
+          </div>
+          <div style="float:left;">
             <input id = "searchtext" type = "text" name = "searchtext">
         </form>
     </div>
@@ -90,13 +97,17 @@
             <img src = "{{ url_for('static', filename = 'img/logo1.png') }}" width = "68" height = "68" id = "logo">
         </a>
         <form id = "searchbar" action = "/search-results">
+          <div style="float:left; position: relative; top:40%;">
             <select name="search-cats" id="search-cats">
                 <option value = "ALL"> All </option>
                 {% for category in categories %}
                 <option value = {{category.name}} > {{ category.name }} </option>
                 {% endfor %}
             </select>
+          </div>
+          <div style="float:left;">
             <input id = "searchtext" type = "text" name = "searchtext">
+          </div>
         </form>
     </div>
 
