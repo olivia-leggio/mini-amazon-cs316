@@ -5,6 +5,77 @@
 {% endblock %}
 
 {% block body %}
+<h1>Warehouse Administration</h1>
+<h3>Warehouses</h3>
+<table>
+  <thead>
+    <th>id</th>
+    <th>Address</th>
+    <th>Capacity</th>
+    <th>Currently Filled</th>
+  </thead>
+  <tbody>
+  {% for house in warehouses %}
+    <tr>
+      <td> {{ house.id }}</td>
+      <td>{{ house.street }} {{ house.city }} {{ house.state }} {{ house.zip }}</td>
+      <td> {{ house.capacity }}</td>
+      <td>
+        {% set ftotal= {'total': 0} %}
+        {%- for l in all_listings if l.warehouse==house -%}
+        {% if ftotal.update({'total': ftotal.total + l.amount }) %}{% endif %}
+        {%- endfor -%}
+        {{ftotal.total}}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<br /><br />
+
+<h3>Warehouse Managers</h3>
+<table>
+  <thead>
+    <th>Warehouse ID</th>
+    <th>Warehouse Address</th>
+    <th>Manager Email</th>
+    <th>Manager Name</th>
+    <th>Change Manager</th>
+  </thead>
+  <tbody>
+  {% for loc in locations %}
+    <tr>
+      <td> {{ loc.warehouse.id }}</td>
+      <td>{{ loc.warehouse.street }} {{ loc.warehouse.city }} {{ loc.warehouse.state }} {{ loc.warehouse.zip }}</td>
+      <td> {{ loc.manager.email }}</td>
+      <td> {{ loc.manager.name }}</td>
+      <td>
+        <form action="/change_manager" >
+          <input type="text" name="email" placeholder = "New Email"/>
+          <button type="submit" name="whouse_id" value= {{ loc.warehouse.id}} >Submit</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<br /><br />
+
+<h2>New Warehouse<h2>
+<form action="/new_house" >
+  <label>Address</label>
+  <input type="text" name="street" placeholder = "Street"/>
+  <input type="text" name="city" placeholder = "City"/>
+  <input type="number" name="zip" placeholder = "Zip"/>
+  <input type="text" name="state" placeholder = "State (NC)"/>
+  <br />
+  <br />
+  <label>Capacity</label>
+  <input type="number" name="capacity" />
+  <br />
+  <input type="submit" />
+</form>
+
 <h1>Testing Users Functionality</h1>
 <h3>Users</h3>
 <table>
@@ -67,52 +138,6 @@
 
   <input type="submit" />
 </form>
-
-<h1>Testing Warehouses Functionality</h1>
-<h3>Warehouses</h3>
-<table>
-  <thead>
-    <th>id</th>
-    <th>Address</th>
-    <th>Capacity</th>
-    <th>Currently Filled</th>
-  </thead>
-  <tbody>
-  {% for house in warehouses %}
-    <tr>
-      <td> {{ house.id }}</td>
-      <td>{{ house.street }} {{ house.city }} {{ house.state }} {{ house.zip }}</td>
-      <td> {{ house.capacity }}</td>
-      <td>
-        {% set ftotal= {'total': 0} %}
-        {%- for l in all_listings if l.warehouse==house -%}
-        {% if ftotal.update({'total': ftotal.total + l.amount }) %}{% endif %}
-        {%- endfor -%}
-        {{ftotal.total}}
-      </td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
-<br /><br />
-
-<h2>New Warehouse<h2>
-<form action="/new_house" >
-  <label>Address</label>
-  <input type="text" name="street" placeholder = "Street"/>
-  <input type="text" name="city" placeholder = "City"/>
-  <input type="number" name="zip" placeholder = "Zip"/>
-  <input type="text" name="state" placeholder = "State (NC)"/>
-  <br />
-  <br />
-  <label>Capacity</label>
-  <input type="number" name="capacity" />
-  <br />
-  <input type="submit" />
-</form>
-
-
-
 
 <h1>Testing Items/Categories Functionality</h1>
 <h3>Items</h3>

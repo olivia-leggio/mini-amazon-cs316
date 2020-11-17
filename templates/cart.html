@@ -28,6 +28,7 @@
                 <th>Item</th>
                 <th>Price</th>
                 <th>Quantity</th>
+                <th>Est. Delivery Time</th>
             </tr>
             <tbody>
             {% for item in items %}
@@ -36,6 +37,19 @@
                     <td>{{ item.name }}</td>
                     <td>{{ item.price }}</td>
                     <td>{{ item.amount }}</td>
+                    <td>
+                      {%- if item.city==me.city -%}
+                      1 days
+                      {%- elif item.state==me.state -%}
+                      2 days
+                      {%- elif regions[item.state]==regions[me.state] -%}
+                      4 days
+                      {%- elif (regions[item.state] - regions[me.state] < 3) and (regions[me.state] - regions[item.state] < 3) -%}
+                      7 days
+                      {%- else -%}
+                      10 days
+                      {%- endif -%}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -79,7 +93,7 @@
         document.getElementById("deletes").style.display = "none";
         document.getElementById("checkouts").style.display = "block";
     }
-    
+
     function toggleDelete() {
         document.getElementById("deletes").style.display = "block";
         document.getElementById("checkouts").style.display = "none";

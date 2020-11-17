@@ -27,7 +27,12 @@
   <tbody>
   {% for item in items %}
     <tr>
-      <td> {{ item.name }}</td>
+      <td> <img src = "{{ url_for('static', filename = item.imgurl ) }}" width = "68" height = "68"> </td>
+      <td> 
+          <form action="/item">
+          <button type="submit" name="item_id" value= {{item.id}}>{{ item.name|truncate(50) }}</button>
+          </form>
+      </td>
       <td> {{ item.brand }}</td>
       <td> {{ item.desc |truncate(100)}}</td>
     </tr>

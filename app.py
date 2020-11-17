@@ -9,7 +9,7 @@ from sqlalchemy.sql import func
 app = Flask(__name__)
 app.config.update(
     DEBUG=True,
-    MAIL_SERVER='smtp.gmail.com', 
+    MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=465,
     MAIL_USE_SSL=True,
     MAIL_USERNAME='miniamazongroup20@gmail.com',
@@ -32,6 +32,15 @@ def ID():
 def Cats():
     return Category.query.all()
 
+regions = {
+    "AK": 10,"AL": 3,"AR": 7, "AZ": 8, "CA": 9, "CO": 8, "CT":0, "DC":2, "DE":1,
+     "FL":3, "GA":3, "HI":11, "IA":5, "ID":8, "IL":6, "IN":4, "KS":6, "KY":4,
+     "LA": 7, "MD": 2, "ME": 0, "MA": 0, "MI": 4, "MN": 5, "MS": 3, "MO": 8,
+     "MT": 5, "NE": 6, "NV": 8, "NH": 0, "NJ": 0,"NC": 2, "ND": 5, "NM": 8,
+     "NY": 1, "OH": 4, "OK": 7, "OR": 9, "PA": 1, "RI": 0, "SC": 2, "SD": 5,
+     "TN": 3, "TX": 7, "UT": 8, "VA": 2, "VT": 0, "WA": 9,"WI": 5,"WV":2, "WY":8
+}
+
 
 @app.route('/')
 def index():
@@ -40,7 +49,7 @@ def index():
 @app.route('/databaseview')
 def databaseview():
     # Use the following code to delet anything you want. All you have to do is visit the /databaseview url and it will
-    # delete the entry 
+    # delete the entry
 
     # user = User.query.filter_by(email='amrbedawi26@gmail.com').first()
     # db_session.delete(user)
@@ -84,14 +93,14 @@ def login():
             return redirect(url_for('index'))
 
     # If you get here from a get request, render the page unless already logged in
-    if session.get('USERID') is None: 
+    if session.get('USERID') is None:
         return render_template('login.html', categories = Cats())
     else:
         return redirect(url_for('index'))
 
 @app.route('/logout')
 def logout():
-    if session.get('USERID') is not None: 
+    if session.get('USERID') is not None:
         session.pop('NAME',None)
         session.pop('TYPE',None)
         session.pop('USERID',None)
@@ -114,7 +123,7 @@ def signup():
         type_ = 'User'
         if req.get('userTypeSeller'):
             type_ = 'Seller'
-        
+
 
         confirm_email = req['confirm_email']
         confirm_password = req['confirm_password']
@@ -132,7 +141,7 @@ def signup():
         if exists:
             flash('An account with this email already exists. Login with your existing email or use a different one.')
             valid = False
-            
+
         if password != confirm_password:
             flash('Password do not match.')
             valid = False
@@ -140,7 +149,7 @@ def signup():
         if len(str(zipcode)) != 5:
             flash('Please enter a valid zipcode.')
             valid = False
-            
+
         if not valid:
             return render_template('signup.html')
 
@@ -156,7 +165,7 @@ def signup():
         return redirect(url_for('index'))
 
     # If you get here from a get request, render the page unless already logged in
-    if session.get('USERID') is None: 
+    if session.get('USERID') is None:
         return render_template('signup.html', categories = Cats())
     else:
         return redirect(url_for('index'))
@@ -167,16 +176,16 @@ def browse():
     print(me_id)
     if me_id is None:
         return redirect(url_for('login'))
-    
+
     cat = request.args.get('cat','ALL')
     incats = InCat.query.join(Category).filter_by(name=cat)
-    
+
     sql_item_in_cat = '''SELECT *
                         FROM items I
                         WHERE EXISTS (SELECT * FROM categories C, inCategory A
                                     WHERE I.id=A.item_id and C.id=A.cat_id
                                     and C.name = :1)'''
-  
+
     items = engine.execute(sql_item_in_cat,cat)
     if cat == 'ALL':
         incats = InCat.query.all()
@@ -189,7 +198,7 @@ def browse():
     items = items,
     me = User.query.filter_by(id=me_id).first(),
     name = Name(), type = Type(), categories = Cats())
-    
+
 @app.route('/add_item')
 def add_item():
   name = request.args.get("name")
@@ -366,9 +375,12 @@ def cart():
     if me_id is None:
         return redirect(url_for('login'))
 
-    sql_get_cart = '''SELECT I.imgurl AS img, I.name AS name, L.price AS price, C.amount AS amount, C.id AS id
-                      FROM carts C, listings L, items I
-                      WHERE C.user_id = {} AND C.listing_id = L.id
+    me = User.query.filter_by(id=me_id).first()
+
+    sql_get_cart = '''SELECT I.imgurl AS img, I.name AS name, L.price AS price, C.amount AS amount, C.id AS id,
+                             W.street AS street, W.city AS city, W.zip AS zip, W.state AS state
+                      FROM carts C, listings L, items I, warehouses W
+                      WHERE C.user_id = {} AND C.listing_id = L.id AND L.warehouse_id = W.id
                       AND L.item_id = I.id'''.format(me_id)
 
     cart_items = engine.execute(sql_get_cart)
@@ -377,13 +389,14 @@ def cart():
     num = len(rows)
     cart_copy = engine.execute(sql_get_cart)
 
-    return render_template('cart.html', items = cart_items, items2 = cart_copy, num = num, name = Name(), type = Type(), categories = Cats())
+    return render_template('cart.html', items = cart_items, items2 = cart_copy,
+    num = num, name = Name(), type = Type(), categories = Cats(),me=me,regions=regions)
 
 @app.route('/checkout', methods = ["GET", "POST"])
 def checkout():
     if request.method == 'POST':
         checkout_list = request.form.getlist("cartItem")
-    
+
     for id in checkout_list:
         cart_id = id
         cart = Cart.query.filter_by(id=cart_id).first()
@@ -405,7 +418,7 @@ def checkout():
         db_session.add(order)
         db_session.delete(cart)
         db_session.commit()
-    
+
     return render_template("finished-order.html", name = Name(), type = Type(), categories = Cats())
 
 @app.route('/delete-cart', methods = ["GET", "POST"])
@@ -416,7 +429,7 @@ def delete_cart():
     for id in delete_list:
         cart_id = id
         cart = Cart.query.filter_by(id = cart_id).first()
-        
+
         db_session.delete(cart)
         db_session.commit()
 
@@ -444,7 +457,7 @@ def results():
     sql_items_all = '''SELECT *
                         FROM items I
                         WHERE I.name LIKE '%{}%' '''.format(query)
-    
+
     sql_listings2 = '''SELECT L.price, L.id
                         FROM items I, listings L
                         WHERE I.name LIKE '%{}%' and L.item_id = I.id '''.format(query)
@@ -471,15 +484,15 @@ def items():
         cost = cost + l.price
         num = num + 1
     if num != 0:
-        cost = round(cost/num)    
+        cost = round(cost/num)
     num = 0
     for r in reviews:
         rating = rating + r.item_rating
         num = num + 1
     if num != 0:
         rating = round(rating/num)
-  
-    return render_template('item.html', 
+
+    return render_template('item.html',
         items = Item.query.filter_by(id=ids).first(),
         cats = InCat.query.filter_by(item_id=ids).first(),
         sellers = listings, reviews = reviews,
@@ -524,8 +537,10 @@ def test():
     return render_template(
         'test.html',
         users = User.query.order_by(func.random()).limit(30).all(),
+        all_users = User.query.all(),
         sellers = User.query.filter_by(type="Seller"),
         warehouses = Warehouse.query.all(),
+        locations = ManagerLocation.query.all(),
         cats = Category.query.all(),
         incats = InCat.query.order_by(func.random()).limit(30).all(),
         items = Item.query.order_by(func.random()).limit(30).all(),
@@ -536,6 +551,33 @@ def test():
         orders = Order.query.order_by(func.random()).limit(30).all(),
         name = Name(), type = Type(), categories = Cats()
     )
+
+@app.route('/change_manager')
+def change_manager():
+
+    wid = request.args.get("whouse_id")
+    email = request.args.get("email")
+
+    whouse = Warehouse.query.filter_by(id=wid).first()
+    newManager = User.query.filter_by(email=email).first()
+
+    oldloc = ManagerLocation.query.filter_by(warehouse_id=wid).first()
+
+    if oldloc is not None:
+        oldloc.manager.type = 'User'
+        db_session.delete(oldloc)
+
+    newloc = ManagerLocation()
+    newloc.warehouse = whouse
+    newloc.manager = newManager
+    whouse.manager.append(newloc)
+    newManager.warehouse = newloc
+    newManager.type = 'Manager'
+    db_session.add(newloc)
+
+    db_session.commit()
+
+    return redirect(url_for('test'))
 
 @app.route('/delete_item')
 def delete_item():
@@ -600,7 +642,7 @@ def add_review():
     me_id = session.get("USERID")
     if me_id is None:
         return redirect(url_for('login'))
-        
+
     user_id = ID()
     item_id = request.args.get("item_id")
     seller_id = request.args.get("seller_id")
@@ -634,7 +676,7 @@ def addlistingpage():
         return redirect(url_for('denied'))
 
     item_id = request.args.get("item_id")
-    
+
     listing = None
     if request.args.get("listing_id"):
         listing = Listing.query.filter_by(id = request.args.get("listing_id")).first()
