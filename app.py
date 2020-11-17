@@ -207,8 +207,9 @@ def add_item():
   brand = request.args.get("brand")
   desc = request.args.get("desc")
   cat = request.args.get("cat")
+  image_url = "img/no_image_available.jpg"
 
-  item = Item(name, brand,desc,None)
+  item = Item(name, brand,desc,image_url)
   category = Category.query.filter_by(name=cat).first()
   assoc = InCat()
   assoc.cat = category
