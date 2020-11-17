@@ -22,20 +22,32 @@
       <th>  </th>
       <th>Name</th>
       <th>Brand</th>
+      <th>Category</th>
+      <th>Price</th>
+      <th>Average Rating</th>
     </thead>
     <tbody>
-    {% for item in items %}
+    {% for rev in toprevs %}
       <tr>
         <td>
-          <img src = "{{ url_for('static', filename = item.imgurl ) }}" width = "68" height = "68">
+          <img src = "{{ url_for('static', filename = rev.item.imgurl ) }}" width = "68" height = "68">
 
         </td>
-        <td> 
+        <td>
             <form action="/item">
-                <button type="submit" name="item_id" value= {{item.id}}>{{ item.name|truncate(50) }}</button>
+                <button type="submit" name="item_id" value= {{rev.item.id}}>{{ rev.item.name|truncate(50) }}</button>
             </form>
         </td>
-        <td> {{ item.brand }}</td>
+        <td> {{ rev.item.brand }}</td>
+        <td> {{ rev.item.categories[0].cat.name }}</td>
+        <td> ${{ rev.item.listings[0].price }} </td>
+        <td>
+          {% set ftotal= {'sum': 0,'count': 0} %}
+          {%- for r in allrevs if r.item_id==rev.item_id -%}
+          {% if ftotal.update({'sum': ftotal.sum + r.item_rating,'count': ftotal.count + 1 }) %}{% endif %}
+          {%- endfor -%}
+          {{ftotal.sum / ftotal.count}}
+        </td>
       </tr>
     {% endfor %}
     </tbody>

@@ -44,7 +44,9 @@ regions = {
 
 @app.route('/')
 def index():
-    return render_template('index.html', items = Item.query.limit(5).all(), categories = Cats(), name = Name(), type = Type())
+    reviews = Review.query.filter_by(item_rating=5).order_by(func.random()).limit(5).all()
+    all_reviews = Review.query.all()
+    return render_template('index.html', toprevs = reviews, allrevs = all_reviews, categories = Cats(), name = Name(), type = Type())
 
 @app.route('/databaseview')
 def databaseview():
