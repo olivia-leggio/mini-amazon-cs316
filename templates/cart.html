@@ -34,7 +34,11 @@
             {% for item in items %}
                 <tr>
                     <td><input type = "checkbox" name = "cartItem" value = "{{ item.id }}"></td>
-                    <td>{{ item.name }}</td>
+                    <td>
+                        <form action="/item">
+                        <button type="submit" name="item_id" value= {{item.item_id}}>{{ item.name|truncate(50) }}</button>
+                        </form>
+                    </td>
                     <td>{{ item.price }}</td>
                     <td>{{ item.amount }}</td>
                     <td>

@@ -4,7 +4,7 @@ from database import db_session, engine
 from datetime import datetime
 import secrets
 from flask_mail import Mail, Message
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, text
 
 app = Flask(__name__)
 app.config.update(
@@ -331,11 +331,11 @@ def wallet():
     if me_id is None:
         return redirect(url_for('login'))
 
-    sql_get_balance = '''SELECT balance
+    sql_get_balance = text('''SELECT balance
                          FROM users
-                         WHERE id = {}'''.format(me_id)
+                         WHERE id = :id''')
 
-    balance = engine.execute(sql_get_balance)
+    balance = engine.execute(sql_get_balance,id=me_id)
 
     return render_template('wallet.html', balance = balance, name = Name(), type = Type(), categories = Cats())
 
@@ -347,11 +347,11 @@ def update_balance():
 
     to_add = request.args.get("added_balance")
 
-    sql_update_balance = '''UPDATE users
-                            SET balance = balance + {}
-                            WHERE id = {}'''.format(to_add, me_id)
+    sql_update_balance = text('''UPDATE users
+                            SET balance = balance + :add
+                            WHERE id = :id''')
 
-    engine.execute(sql_update_balance)
+    engine.execute(sql_update_balance,add=to_add,id=me_id)
 
     return redirect(url_for('wallet'))
 
@@ -361,11 +361,11 @@ def orderHistory():
     if me_id is None:
         return redirect(url_for('login'))
 
-    sql_get_history = '''SELECT I.name AS name, delivered, amount
+    sql_get_history = text('''SELECT I.name AS name, delivered, amount, I.id AS id
                          FROM orders O, items I
-                         WHERE user_id = {} AND item_id = I.id'''.format(me_id)
+                         WHERE user_id = :id AND item_id = I.id''')
 
-    history_items = engine.execute(sql_get_history)
+    history_items = engine.execute(sql_get_history,id=me_id)
 
     return render_template('order-history.html', items = history_items, name = Name(), type = Type(), categories = Cats())
 
@@ -378,16 +378,16 @@ def cart():
     me = User.query.filter_by(id=me_id).first()
 
     sql_get_cart = '''SELECT I.imgurl AS img, I.name AS name, L.price AS price, C.amount AS amount, C.id AS id,
-                             W.street AS street, W.city AS city, W.zip AS zip, W.state AS state
+                             W.street AS street, W.city AS city, W.zip AS zip, W.state AS state, I.id AS item_id
                       FROM carts C, listings L, items I, warehouses W
-                      WHERE C.user_id = {} AND C.listing_id = L.id AND L.warehouse_id = W.id
-                      AND L.item_id = I.id'''.format(me_id)
+                      WHERE C.user_id = :id AND C.listing_id = L.id AND L.warehouse_id = W.id
+                      AND L.item_id = I.id'''
 
-    cart_items = engine.execute(sql_get_cart)
-    count_items = engine.execute(sql_get_cart)
+    cart_items = engine.execute(sql_get_cart,id=me_id)
+    count_items = engine.execute(sql_get_cart,id=me_id)
     rows = [r[0] for r in count_items]
     num = len(rows)
-    cart_copy = engine.execute(sql_get_cart)
+    cart_copy = engine.execute(sql_get_cart,id=me_id)
 
     return render_template('cart.html', items = cart_items, items2 = cart_copy,
     num = num, name = Name(), type = Type(), categories = Cats(),me=me,regions=regions)
@@ -456,29 +456,29 @@ def results():
     query = request.args.get("searchtext")
     category = request.args.get('search-cats','ALL')
 
-    sql_items_cat = '''SELECT *
+    sql_items_cat = text('''SELECT *
                     FROM items I
-                    WHERE I.name LIKE '%{}%' and EXISTS (SELECT * FROM categories C, inCategory A
+                    WHERE I.name LIKE :term and EXISTS (SELECT * FROM categories C, inCategory A
                                   WHERE I.id=A.item_id and C.id=A.cat_id
-                                  and C.name = :1)'''.format(query)
-    sql_listings1 = '''SELECT L.price, L.id
+                                  and C.name = :cat)''')
+    sql_listings1 = text('''SELECT L.price, L.id
                     FROM items I, listings L
-                    WHERE I.name LIKE '%{}%' and L.item_id = I.id and EXISTS (SELECT * FROM categories C, inCategory A
+                    WHERE I.name LIKE :term and L.item_id = I.id and EXISTS (SELECT * FROM categories C, inCategory A
                                   WHERE I.id=A.item_id and C.id=A.cat_id
-                                  and C.name = :1)'''.format(query)
+                                  and C.name = :cat)''')
 
-    results = engine.execute(sql_items_cat,category)
-    listings = engine.execute(sql_listings1,category)
+    results = engine.execute(sql_items_cat,term='%'+query+'%',cat=category)
+    listings = engine.execute(sql_listings1,term='%'+query+'%',cat=category)
 
-    sql_items_all = '''SELECT *
+    sql_items_all = text('''SELECT *
                         FROM items I
-                        WHERE I.name LIKE '%{}%' '''.format(query)
+                        WHERE I.name LIKE :term ''')
 
-    sql_listings2 = '''SELECT L.price, L.id
+    sql_listings2 = text('''SELECT L.price, L.id
                         FROM items I, listings L
-                        WHERE I.name LIKE '%{}%' and L.item_id = I.id '''.format(query)
-    results1 = engine.execute(sql_items_all)
-    listings1 = engine.execute(sql_listings2)
+                        WHERE I.name LIKE :term and L.item_id = I.id ''')
+    results1 = engine.execute(sql_items_all,term='%'+query+'%')
+    listings1 = engine.execute(sql_listings2,term='%'+query+'%')
 
     if category == 'ALL':
         results = results1
@@ -530,10 +530,10 @@ def seller():
     results = None
     if request.args.get("searchtext"):
         query = request.args.get("searchtext")
-        sql_items_all = '''SELECT *
+        sql_items_all = text('''SELECT *
                          FROM items I
-                         WHERE I.name LIKE '%{}%' '''.format(query)
-        results = engine.execute(sql_items_all)
+                         WHERE I.name LIKE :term ''')
+        results = engine.execute(sql_items_all,term='%'+query+'%')
 
     return render_template('seller.html',
         seller = me,

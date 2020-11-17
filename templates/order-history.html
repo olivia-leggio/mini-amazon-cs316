@@ -11,7 +11,7 @@
 <h3>Order History</h3>
 <table>
     <thead>
-        <th>Item Id</th>
+        <th>Item Name</th>
         <th>Delivered</th>
         <th>Quantity</th>
     </thead>
@@ -19,7 +19,11 @@
     {% for item in items %}
         {% if item.delivered %}
             <tr>
-                <td>{{ item.name }}</td>
+              <td>
+                  <form action="/item">
+                  <button type="submit" name="item_id" value= {{item.id}}>{{ item.name|truncate(50) }}</button>
+                  </form>
+              </td>
                 <td>delivered</td>
                 <td>{{ item.amount }}</td>
             </tr>
