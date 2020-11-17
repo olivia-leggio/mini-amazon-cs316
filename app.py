@@ -822,6 +822,13 @@ def add_cart():
     listing_id = request.args.get("listing_id")
     amount = request.args.get("amount")
 
+    me = User.query.filter_by(id=user_id).first()
+    prevCart = Cart.query.filter_by(user_id=user_id).filter_by(listing_id=listing_id).first()
+
+    if prevCart is not None:
+        db_session.delete(prevCart)
+        db_session.commit()
+
     if not amount:
         amount = 1
 
