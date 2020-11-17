@@ -61,6 +61,13 @@
     <h3>Your cart is empty!</h3>
     {% endif %}
 </div>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+  {% for msg in messages %}
+    <p style="color:red">{{msg}}</p>
+  {% endfor %}
+{% endif %}
+{% endwith %}
 <!---------------------------------------------------------------------------------------------------------------->
 <div id = "deletes">
 <h3>Delete items from cart</h3>

@@ -394,12 +394,28 @@ def cart():
 
 @app.route('/checkout', methods = ["GET", "POST"])
 def checkout():
-    if request.method == 'POST':
-        checkout_list = request.form.getlist("cartItem")
+    me_id = session.get("USERID")
+    if me_id is None:
+        return redirect(url_for('login'))
 
-    for id in checkout_list:
-        cart_id = id
-        cart = Cart.query.filter_by(id=cart_id).first()
+    me = User.query.filter_by(id=me_id).first()
+    if request.method == 'POST':
+        checkout_list = me.carts
+
+    money = 0
+    for cart in checkout_list:
+        money = money + cart.listing.price * cart.amount
+        if cart.amount > cart.listing.amount:
+            item_name = cart.listing.item.name[:40]
+            flash("There aren't enough of "+ item_name + "!!!")
+            return(redirect(url_for('cart')))
+
+    if money > me.balance:
+        flash("You don't have enough money!!!")
+        return(redirect(url_for('cart')))
+
+
+    for cart in checkout_list:
         order = Order(datetime.now(),False,cart.listing.price,cart.amount)
         order.user = cart.user
         order.seller = cart.listing.seller
